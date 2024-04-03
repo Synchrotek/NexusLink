@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Backend for mern-auth -1 project",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "synchrotek",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-jwt": "^8.4.1",
+    "express-validator": "^7.0.1",
+    "google-auth-library": "^9.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "mongoose": "^8.2.4",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.9.13"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
