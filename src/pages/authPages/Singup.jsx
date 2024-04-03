@@ -133,6 +133,7 @@ const Singup = () => {
             <div>
                 <button className='btn btn-block mt-2'
                     onClick={clickSubmit}
+                    disabled={values.loading}
                 >{values.loading ? (
                     <span className='loading loading-spinner'></span>
                 ) : 'Sign Up'}
@@ -142,11 +143,11 @@ const Singup = () => {
     )
 
     return (
-        <Layout className='backgroundWallpaper min-h-screen flex flex-col items-center justify-center min-w-96 mx-auto px-36'>
+        <Layout className='backgroundWallpaper min-h-screen flex flex-col items-center justify-center min-w-96 mx-auto'>
             <ToastContainer />
-            <div className="w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0">
+            <div className="rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0 w-3/4 sm:w-1/2 md:w-1/2 lg:w-1/2 px-6 py-106">
                 {isAuth() ? <Navigate to='/' /> : null}
-                <h1 className='text-3xl font-semibold text-center text-gray-300 mb-2'>
+                <h1 className='text-3xl font-semibold text-center text-gray-300 my-2'>
                     <span className='text-blue-300'>Let's</span>
                     &nbsp;Sign Up
                 </h1>

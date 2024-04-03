@@ -57,7 +57,8 @@ const AccountActivate = () => {
     )
 
     return (
-        <Layout>
+        // <Layout className='backgroundWallpaper_dim min-h-screen flex items-center justify-center'>
+        <Layout className=''>
             <ToastContainer />
             <div className='text-2xl'>
                 {activationLink()}

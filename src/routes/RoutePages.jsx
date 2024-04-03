@@ -9,6 +9,7 @@ import PrivateRoutes from './PrivateRoleRoutes.jsx'
 import UserProfile from '../pages/UserProfile.jsx'
 import ForgotPassword from '../pages/authPages/ForgotPassword.jsx'
 import ResetPassword from '../pages/authPages/ResetPassword.jsx'
+import Workspace from '../pages/workspacePages/Workspace.jsx'
 
 const RoutePages = () => {
     return (
@@ -24,6 +25,7 @@ const RoutePages = () => {
                 {/* Private Routes ------------------------------- */}
                 <Route element={<PrivateRoutes />}>
                     <Route path='/room' element={<RoomPage />} />
+                    <Route path='/room/:roomId' element={<Workspace />} />
                     <Route path='/user' element={<UserProfile />} />
                 </Route>
             </Routes>

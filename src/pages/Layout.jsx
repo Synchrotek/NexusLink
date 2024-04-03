@@ -26,8 +26,9 @@ const Layout = ({ children, className }) => {
                         </Link>
                         <Link className="btn btn-outline btn-error"
                             onClick={() => {
-                                signout();
-                                navigate('/signin')
+                                signout(() => {
+                                    navigate('/signin')
+                                });
                             }}><p className='text-white'>LogOut</p>
                         </Link>
                     </>) : (<>
