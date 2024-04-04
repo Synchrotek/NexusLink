@@ -15,3 +15,21 @@
     background-size: cover;
     background-position: center;
 }
+
+.gifLogoAnimation {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)), url('/codingAnimation1.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.hideScrollBar::-webkit-scrollbar {
+    display: none;
+}
+
+.hideScrollBar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}

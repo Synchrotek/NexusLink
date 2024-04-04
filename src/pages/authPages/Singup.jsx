@@ -143,7 +143,7 @@ const Singup = () => {
     )
 
     return (
-        <Layout className='backgroundWallpaper min-h-screen flex flex-col items-center justify-center min-w-96 mx-auto'>
+        <Layout navFixed={true} className='backgroundWallpaper min-h-screen flex flex-col items-center justify-center min-w-96 mx-auto'>
             <ToastContainer />
             <div className="rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0 w-3/4 sm:w-1/2 md:w-1/2 lg:w-1/2 px-6 py-106">
                 {isAuth() ? <Navigate to='/' /> : null}

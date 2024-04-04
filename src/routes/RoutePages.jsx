@@ -4,7 +4,7 @@ import Home from '../pages/Home'
 import Singin from '../pages/authPages/Signin'
 import Singup from '../pages/authPages/Singup'
 import AccountActivate from '../pages/authPages/AccountActivate'
-import RoomPage from '../pages/RoomPage'
+import RoomSelect from '../pages/RoomSelect.jsx'
 import PrivateRoutes from './PrivateRoleRoutes.jsx'
 import UserProfile from '../pages/UserProfile.jsx'
 import ForgotPassword from '../pages/authPages/ForgotPassword.jsx'
@@ -24,7 +24,7 @@ const RoutePages = () => {
 
                 {/* Private Routes ------------------------------- */}
                 <Route element={<PrivateRoutes />}>
-                    <Route path='/room' element={<RoomPage />} />
+                    <Route path='/room' element={<RoomSelect />} />
                     <Route path='/room/:roomId' element={<Workspace />} />
                     <Route path='/user' element={<UserProfile />} />
                 </Route>

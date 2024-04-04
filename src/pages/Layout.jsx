@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { isAuth, signout } from '../utils/authUtils/helper'
 
-const Layout = ({ children, className }) => {
+const Layout = ({ children, navFixed, className }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const isActive = (path) => {
@@ -13,12 +13,18 @@ const Layout = ({ children, className }) => {
         <div>
 
             {/* NavBar --------------------------------------------- */}
-            <div className="navbar bg-slate-600 flex justify-between px-4">
+            <div className={`navbar bg-slate-600 flex justify-between px-4 
+                ${navFixed ? 'fixed' : ''}`}>
                 <Link to='/' className='text-white'>
                     CollabCode
                 </Link>
                 <div className="navbar-end gap-3">
                     {isAuth() ? (<>
+                        <Link to='/room'
+                            className={`btn btn-info border-none
+                            ${isActive('/room') ? '' : 'btn-outline'}`}
+                        ><p className='text-white'>Room Select</p>
+                        </Link>
                         <Link to='/user'
                             className={`btn btn-info border-none
                             ${isActive('/user') ? '' : 'btn-outline'}`}
@@ -47,7 +53,7 @@ const Layout = ({ children, className }) => {
             </div>
 
             {/* Children prop --------------------------------------------- */}
-            <div className={className}>
+            <div className={className} >
                 {children}
             </div>
         </div >
