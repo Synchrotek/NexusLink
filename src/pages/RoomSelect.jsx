@@ -33,7 +33,9 @@ const RoomSelect = () => {
             return toast.error('ROOM ID & Username is required');
         }
         navigate(`/room/${values.roomId}`, {
-            state: values.username
+            state: {
+                username: values.username
+            }
         });
     }
 
