@@ -3,9 +3,13 @@ const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const http = require('http')
+const { Server } = require('socket.io')
 require('dotenv').config();
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 app.use(cors({
     origin: process.env.CLIENT_URL,
     optionsSuccessStatus: 200, // For legacy browser support
@@ -20,6 +24,10 @@ mongoose.connect(process.env.MONGO_URI, {})
 // import routes -----------------------------------
 const authRoutes = require('./routes/auth.route.js');
 const userRoutes = require('./routes/user.route.js');
+
+// socket.io listener ------------------------------
+const socketListen = require('./socketComm.js')
+socketListen(io);
 
 // Import global middlewares -----------------------
 const { setClientHeader } = require('./validators/index.validator.js');
@@ -36,7 +44,11 @@ app.use('/api', setClientHeader, authRoutes);
 app.use('/api', setClientHeader, userRoutes);
 
 const PORT = process.env.PORT || 4500;
-app.listen(PORT, () => {
-    console.log(`Server running: http://localhost:${PORT}`)
-})
-
+// app.listen(PORT, () => {
+//     console.log(`Server running: http://localhost:${PORT}`)
+// })
+server.listen(PORT, () => {
+    console.log(`Server running: http://localhost:${PORT}`);
+}).on('error', (err) => {
+    console.error('Server error:', err);
+});

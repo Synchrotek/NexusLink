@@ -3,7 +3,6 @@ import Client from './Client';
 import CodeEditor from './CodeEditor';
 
 const Workspace = () => {
-
     const [clients, setClients] = useState([
         { socketId: 1, username: 'Sam k' },
         { socketId: 2, username: 'Alm P' },
