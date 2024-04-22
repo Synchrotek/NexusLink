@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -6,7 +6,7 @@ import Layout from '../Layout'
 
 const ForgotPassword = () => {
     const [values, setValues] = useState({
-        email: 'biswajitswain348@gmail.com',
+        email: '',
         loading: false
     });
 
@@ -64,7 +64,7 @@ const ForgotPassword = () => {
             <div className="rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0 w-3/4 sm:w-1/2 md:w-1/2 lg:w-1/2 px-6 py-106">
                 <h1 className='text-3xl font-semibold text-center text-gray-300 mb-2'>
                     <div className='text-blue-300 text-2xl'>Forgot Password ?</div>
-                    <p className='text-sm mt-1'>Let's reset It</p>
+                    <p className='text-sm mt-1'>{"Let's"} reset It</p>
                 </h1>
                 {forgotPasswordForm()}
             </div>
