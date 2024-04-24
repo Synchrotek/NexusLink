@@ -13,7 +13,9 @@ const UserProfile = () => {
         name: '',
         email: '',
         password: '',
-        loading: false
+        loading: false,
+        profilePic: '',
+        bio: '',
     });
     const [passwordShow, setPasswordShow] = useState(false);
 
@@ -32,8 +34,8 @@ const UserProfile = () => {
             }
         }).then(response => {
             console.log('USER PROFILE GET', response);
-            const { name, email } = response.data;
-            setValues({ ...values, name, email })
+            const { name, email, profilePic, bio } = response.data;
+            setValues({ ...values, name, email, profilePic, bio })
         }).catch(err => {
             console.log('USER PROFILE UPDATE ERROR', err.response);
             if (err.response.status === 401) {
@@ -57,8 +59,16 @@ const UserProfile = () => {
         if (!updateMode) {
             return setUpdateMode(true);
         }
+        if (!values.password) {
+            return toast.error('Password is required for updation!');
+        }
         setValues({ ...values, loading: true })
-        const dataToSend = { name: values.name, password: values.password }
+        const dataToSend = {
+            name: values.name,
+            bio: values.bio,
+            profilePic: values.profilePic,
+            password: values.password
+        }
         await axios({
             method: 'PUT',
             url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/user/update`,
@@ -101,20 +111,35 @@ const UserProfile = () => {
         <div>
             <label className='label p-2'>
                 <span className='text-base label-text'>
-                    Email :
+                    Profilepic :
                 </span>
             </label>
             <input
                 className='w-full input input-bordered h-10 focus:outline-none'
-                type="email" placeholder='Enter your email'
-                value={values.email} disabled
-                onChange={(e => handleChange(e, 'email'))}
+                type="text" placeholder='Enter your email'
+                value={values.profilePic}
+                disabled={!updateMode}
+                onChange={(e => handleChange(e, 'profilePic'))}
             />
         </div>
         <div>
             <label className='label p-2'>
                 <span className='text-base label-text'>
-                    Password :
+                    Bio :
+                </span>
+            </label>
+            <input
+                className='w-full input input-bordered h-10 focus:outline-none'
+                type="text" placeholder='Update your bio'
+                value={values.bio}
+                disabled={!updateMode}
+                onChange={(e => handleChange(e, 'bio'))}
+            />
+        </div>
+        <div>
+            <label className='label p-2'>
+                <span className='text-base label-text'>
+                    Password : ( For verification )
                 </span>
             </label>
             <input
@@ -163,6 +188,7 @@ const UserProfile = () => {
                 <h1 className='text-3xl font-semibold text-center text-gray-300 my-2'>
                     <span className={!updateMode ? 'hidden' : ''}>Update</span>
                     &nbsp;Your Profile
+                    <p className='text-sm my-2'>{`- ${values.email} -`}</p>
                 </h1>
                 {updateUserForm()}
             </div>

@@ -19,7 +19,7 @@ exports.readUser = (req, res) => {
 }
 
 exports.updateUser = (req, res) => {
-    const { name, password } = req.body;
+    const { name, bio, profilePic, password } = req.body;
     User.findById(req.auth._id).then((user) => {
         if (!user) {
             console.log('User not found');
@@ -30,6 +30,8 @@ exports.updateUser = (req, res) => {
             throw new Error('Name is required');
         }
         user.name = name;
+        user.bio = bio;
+        user.profilePic = profilePic;
         // if user exists authenticate
         if (!user.authenticate(password)) {
             throw new Error('Incorrect Password. Try Again');

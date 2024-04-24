@@ -39,7 +39,7 @@ const transporter = nodemailer.createTransport({
 // };
 
 exports.signup = (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, profilePic, bio } = req.body;
 
     User.findOne({ email }).then(async (user) => {
         if (user) {
@@ -49,7 +49,11 @@ exports.signup = (req, res) => {
         }
 
         const token = jwt.sign(
-            { name, email, password },
+            {
+                name, email, password,
+                profilePic: profilePic ? profilePic : `${process.env.PROFILE_PIC_API}?username=${name}`,
+                bio: bio ? bio : 'Success is not final, failure is not fatal: it is the courage to continue that counts.'
+            },
             process.env.JWT_ACCOUNT_ACTIVATION,
             { expiresIn: '10m' }
         );
@@ -92,7 +96,7 @@ exports.accountActivation = (req, res) => {
 
     if (token) {
         jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, function (err, decoded) {
-            const { name, email, password } = jwt.decode(token);
+            const { name, email, password, profilePic, bio } = jwt.decode(token);
             User.findOne({ email }).then(async (existingUser) => {
                 if (existingUser) {
                     return res.status(400).json({
@@ -105,7 +109,7 @@ exports.accountActivation = (req, res) => {
                         error: 'Expired link. Please Singup again'
                     })
                 }
-                const user = new User({ name, email, password });
+                const user = new User({ name, email, password, profilePic, bio });
                 user.save().then(result => {
                     return res.json({
                         message: 'Signup Activation success. Please Singin'
