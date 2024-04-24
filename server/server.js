@@ -2,7 +2,6 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const http = require('http')
 const { Server } = require('socket.io')
 require('dotenv').config();
@@ -15,12 +14,6 @@ app.use(cors({
     optionsSuccessStatus: 200, // For legacy browser support
 }));
 
-
-// connect to DB -----------------------------------
-mongoose.connect(process.env.MONGO_URI, {})
-    .then(() => console.log("MongoDB connected"))
-    .catch(err => console.log("DB Error => ", err));
-
 // import routes -----------------------------------
 const authRoutes = require('./routes/auth.route.js');
 const userRoutes = require('./routes/user.route.js');
@@ -31,6 +24,7 @@ socketListen(io);
 
 // Import global middlewares -----------------------
 const { setClientHeader } = require('./validators/index.validator.js');
+const connectToMongoDB = require('./db/dbConnect.js');
 
 // app middlewares ---------------------------------
 app.use(morgan('dev'));
@@ -48,6 +42,7 @@ const PORT = process.env.PORT || 4500;
 //     console.log(`Server running: http://localhost:${PORT}`)
 // })
 server.listen(PORT, () => {
+    connectToMongoDB();
     console.log(`Server running: http://localhost:${PORT}`);
 }).on('error', (err) => {
     console.error('Server error:', err);

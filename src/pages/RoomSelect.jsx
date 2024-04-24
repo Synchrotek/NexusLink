@@ -6,10 +6,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import Layout from './Layout'
 
 const RoomSelect = () => {
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+
     const navigate = useNavigate();
     const [values, setValues] = useState({
         roomId: '',
-        username: '',
+        username: currentUser.name,
         loading: false
     });
 

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from 'react'
 import { Editor } from '@monaco-editor/react'
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions';
 
@@ -21,7 +22,7 @@ const CodeEditor = ({ socketRef, roomId, onCodeChange }) => {
     }, [socketRef.current])
 
     const handleEditorChange = (value, e) => {
-        setEditorCode(value);
+        setEditorCode(e.target.value);
         if (socketRef.current) {
             onCodeChange(editorCode);
             // Perform operations related to editorCode state change

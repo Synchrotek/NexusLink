@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+/* eslint-disable react/prop-types */
+import { useEffect, useRef, useState } from 'react'
 import Client from './Client';
 import CodeEditor from './CodeEditor';
 import { useLocation, useNavigate, Navigate, useParams } from 'react-router-dom';
@@ -64,7 +65,7 @@ const Workspace = () => {
         try {
             await navigator.clipboard.writeText(roomId);
             toast.success('ROOM ID has been copied to your clipboard')
-        } catch (error) {
+        } catch (err) {
             toast.error('Could not copy the ROOM ID')
             console.error(err);
         }
