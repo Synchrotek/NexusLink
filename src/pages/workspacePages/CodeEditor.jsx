@@ -3,8 +3,15 @@ import { useEffect, useState } from 'react'
 import { Editor } from '@monaco-editor/react'
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions';
 
-const CodeEditor = ({ socketRef, roomId, onCodeChange, editorLanguage, editorTheme }) => {
+const CodeEditor = ({
+    socketRef, roomId, onCodeChange, editorLanguage, editorTheme, currentSelectedFile, handleFileChange
+}) => {
     const [editorCode, setEditorCode] = useState();
+
+
+    useEffect(() => {
+        setEditorCode(currentSelectedFile.fileContent)
+    }, [currentSelectedFile])
 
     useEffect(() => {
         if (socketRef.current) {
@@ -40,7 +47,7 @@ const CodeEditor = ({ socketRef, roomId, onCodeChange, editorLanguage, editorThe
             theme={editorTheme}
             language={editorLanguage}
             value={editorCode}
-            onChange={handleEditorChange}
+            onChange={handleFileChange}
         />
     )
 }

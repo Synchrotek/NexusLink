@@ -2,7 +2,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdMessage } from "react-icons/md";
 
 const WorksapceHeader = ({
-    isCodeEditorPage, editorLanguage, setEditorLanguage, editorTheme, setEditorTheme
+    isCodeEditorPage, setEditorLanguage, setEditorTheme, currentSelectedFileName
 }) => {
     // Editor dynamic properties -------------------------------------
     const languagesAvailable = [
@@ -24,7 +24,7 @@ const WorksapceHeader = ({
     const EditorPageHeader = () => (
         <>
             <h1 className="h-5/6">
-                Filename.ext
+                {currentSelectedFileName}
             </h1>
             <div className="">
 

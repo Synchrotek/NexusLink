@@ -10,6 +10,7 @@ import UserProfile from '../pages/UserProfile.jsx'
 import ForgotPassword from '../pages/authPages/ForgotPassword.jsx'
 import ResetPassword from '../pages/authPages/ResetPassword.jsx'
 import Workspace from '../pages/workspacePages/Workspace.jsx'
+import WorkspaceProvider from '../context/WorkspaceProvider.jsx';
 
 const RoutePages = () => {
     return (
@@ -25,7 +26,11 @@ const RoutePages = () => {
                 {/* Private Routes ------------------------------- */}
                 <Route element={<PrivateRoutes />}>
                     <Route path='/room' element={<RoomSelect />} />
-                    <Route path='/room/:roomId' element={<Workspace />} />
+                    <Route path='/room/:roomId' element={
+                        <WorkspaceProvider>
+                            <Workspace />
+                        </WorkspaceProvider>
+                    } />
                     <Route path='/user' element={<UserProfile />} />
                 </Route>
             </Routes>
