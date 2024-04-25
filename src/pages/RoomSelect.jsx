@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { v4 as uuidV4 } from 'uuid'
+import { v4 as uuidV4, validate } from 'uuid'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -29,10 +29,13 @@ const RoomSelect = () => {
         toast.success('New roomId creeated');
     }
 
-    const joinRoom = (e) => {
+    const handleJoinRoom = (e) => {
         e.preventDefault();
         if (!values.roomId || !values.username) {
             return toast.error('ROOM ID & Username is required');
+        }
+        if (!validate(values.roomId)) {
+            return toast.error('Invalid room ID');
         }
         navigate(`/room/${values.roomId}`, {
             state: {
@@ -59,7 +62,7 @@ const RoomSelect = () => {
                 <div className='flex justify-between items-center my-4 mx-1'>
                     <button to="/signup"
                         className='btn btn-md lg:w-9/12 btn-accent'
-                        onClick={joinRoom}
+                        onClick={handleJoinRoom}
                     >Join the Room
                     </button>
                     <span className='text-right'>

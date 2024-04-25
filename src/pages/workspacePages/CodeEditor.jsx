@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Editor } from '@monaco-editor/react'
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions';
 
-const CodeEditor = ({ socketRef, roomId, onCodeChange }) => {
+const CodeEditor = ({ socketRef, roomId, onCodeChange, editorLanguage, editorTheme }) => {
     const [editorCode, setEditorCode] = useState();
 
     useEffect(() => {
@@ -35,10 +35,11 @@ const CodeEditor = ({ socketRef, roomId, onCodeChange }) => {
     }
 
     return (
-        <Editor className='bg-orange-300'
-            width="100%" height="100%"
-            theme="vs-dark"
-            defaultLanguage="javascript" value={editorCode}
+        <Editor className='bg pt-2'
+            width="100%" height="90%"
+            theme={editorTheme}
+            language={editorLanguage}
+            value={editorCode}
             onChange={handleEditorChange}
         />
     )

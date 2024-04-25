@@ -1,5 +1,7 @@
 const socketListen = (io) => {
 
+    console.log('socketListen running');
+
     const userSocketMap = {};
 
     const getAllConnectedClient = (roomId) => {

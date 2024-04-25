@@ -13,7 +13,7 @@ const Layout = ({ children, navFixed, className }) => {
         <div>
 
             {/* NavBar --------------------------------------------- */}
-            <div className={`navbar bg-slate-600 flex justify-between px-4 
+            <div className={`navbar bg-slate-600 flex justify-between px-4
                 ${navFixed ? 'fixed' : ''}`}>
                 <Link to='/' className='text-white'>
                     CollabCode

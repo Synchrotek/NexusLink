@@ -2,12 +2,16 @@
 import { useEffect, useRef, useState } from 'react'
 import Client from './Client';
 import CodeEditor from './CodeEditor';
+import WorksapceHeader from './WorksapceHeader';
 import { useLocation, useNavigate, Navigate, useParams } from 'react-router-dom';
 import { initSocket } from '../../utils/socketConn/socket';
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions.js';
 import { ToastContainer, toast } from 'react-toastify';
 
 const Workspace = () => {
+    const [editorLanguage, setEditorLanguage] = useState('javaScript');
+    const [editorTheme, setEditorTheme] = useState('vs-dark');
+
     const location = useLocation();
     const codeRef = useRef(null);
     const socketRef = useRef(null);
@@ -110,13 +114,18 @@ const Workspace = () => {
                 >LEAVE</button>
             </div>
         </div>
-        <div className="##editWrap w-full py-1 ml-3">
+        <div className="w-full py-1 ml-3">
+            <WorksapceHeader
+                editorLanguage={editorLanguage} editorTheme={editorTheme}
+                setEditorLanguage={setEditorLanguage} setEditorTheme={setEditorTheme}
+            />
             <CodeEditor
                 socketRef={socketRef}
                 roomId={roomId}
                 onCodeChange={(editorCode) => {
                     codeRef.current = editorCode;
                 }}
+                editorLanguage={editorLanguage} editorTheme={editorTheme}
             />
         </div>
     </div>
