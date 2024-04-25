@@ -37,9 +37,14 @@ const RoomSelect = () => {
         if (!validate(values.roomId)) {
             return toast.error('Invalid room ID');
         }
+        const { name, email, profilePic, bio, createdAt } = JSON.parse(localStorage.getItem('user'));
+        const tobeSendUsername = {
+            username: values.username,
+            name, email, profilePic, bio, createdAt
+        }
         navigate(`/room/${values.roomId}`, {
             state: {
-                username: values.username
+                userDeatils: tobeSendUsername
             }
         });
     }

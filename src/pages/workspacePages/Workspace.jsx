@@ -9,27 +9,6 @@ import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions.js';
 import { ToastContainer, toast } from 'react-toastify';
 
 // delete here
-const EXAMPLE_CONNECTED_USERS = [
-    { socketId: "o5houZ1Il4l_v0f4AAAX1", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX2", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX3", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX4", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX5", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX6", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX7", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX8", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX9", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX0", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAX12", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAA12X", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAA123X", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAsX", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAawefA124X", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AAAaws124X", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0fafasdd4sAAA124X", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AaAA124X", username: "sam2" },
-    { socketId: "o5houZ1Il4l_v0f4AsAAX", username: "sam2" },
-]
 const EXAMPLE_FILE_LIST = [
     { fileId: 1, filename: 'Main1.py', fileContent: '//First WRite some code here' },
     { fileId: 2, filename: 'Main2.py', fileContent: '//WRite2 some code here' },
@@ -46,7 +25,7 @@ const EXAMPLE_FILE_LIST = [
 const Workspace = () => {
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
-    const [connectedUsers, setConnectedUsers] = useState(EXAMPLE_CONNECTED_USERS);
+    const [connectedUsers, setConnectedUsers] = useState([]);
     const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
     const [currentSelectedFile, setCurrentSelectedFile] = useState(EXAMPLE_FILE_LIST[0]);
 
@@ -71,16 +50,16 @@ const Workspace = () => {
             console.log('Socket Connection Done')
             socketRef.current.emit(SOCKET_ACTIONS.JOIN, {
                 roomId,
-                username: location.state?.username,
+                username: location.state?.userDeatils.username,
             });
 
             //  Listeinging for joined event
             socketRef.current.on(SOCKET_ACTIONS.JOINED, ({ connectedUsers, username, socketId }) => {
-                if (username !== location.state?.username) {
+                if (username !== location.state?.userDeatils.username) {
                     toast.success(`${username} joined the room`);
                     console.log(`${username} joined the room`);
                 }
-                // setConnectedUsers(connectedUsers);
+                setConnectedUsers(connectedUsers);
                 socketRef.current.emit(SOCKET_ACTIONS.SYNC_CODE, {
                     editorCode: codeRef.current,
                     socketId
@@ -100,7 +79,7 @@ const Workspace = () => {
             socketRef.current.off(SOCKET_ACTIONS.DISCONNECTED);
             socketRef.current.disconnect();
         }
-    }, [])
+    }, [location.state?.userDeatils, reactNavigate, roomId])
 
 
     const handleFileChange = (newFileContent) => {
@@ -140,6 +119,7 @@ const Workspace = () => {
                 <UpperSideBar
                     connectedUsers={connectedUsers}
                     files={files}
+                    currentSelectedFile={currentSelectedFile}
                     setCurrentSelectedFile={setCurrentSelectedFile}
                 />
             </div>

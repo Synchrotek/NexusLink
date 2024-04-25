@@ -4,7 +4,9 @@ import ConnectedUsersBar from './ConnectedUsersBar'
 import FileListBar from './FileListBar'
 import { BiAdjust } from "react-icons/bi";
 
-const UpperSideBar = ({ connectedUsers, files, setCurrentSelectedFile }) => {
+const UpperSideBar = ({
+    connectedUsers, files, setCurrentSelectedFile, currentSelectedFile
+}) => {
 
     const [isFilesTabOpen, setIsFilesTabOpen] = useState(false);
 
@@ -20,6 +22,7 @@ const UpperSideBar = ({ connectedUsers, files, setCurrentSelectedFile }) => {
         files.map(file => (
             <FileListBar key={file.fileId}
                 file={file}
+                currentSelectedFile={currentSelectedFile}
                 setCurrentSelectedFile={setCurrentSelectedFile}
             />
 

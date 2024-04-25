@@ -20,7 +20,9 @@ const userRoutes = require('./routes/user.route.js');
 
 // socket.io listener ------------------------------
 const socketListen = require('./socketComm.js')
+const socketCommunication1 = require('./socketConn/socket.communication1.js');
 socketListen(io);
+// socketCommunication1(io);
 
 // Import global middlewares -----------------------
 const { setClientHeader } = require('./validators/index.validator.js');

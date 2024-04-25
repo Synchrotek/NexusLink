@@ -3,6 +3,7 @@ const socketListen = (io) => {
     console.log('socketListen running');
 
     const userSocketMap = {};
+    const roomId_to_code_Map = {};
 
     const getAllConnectedClient = (roomId) => {
         return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map((socketId) => {
@@ -14,10 +15,10 @@ const socketListen = (io) => {
     }
 
     io.on('connection', (socket) => {
-        console.log('A user connected', socket.id);
 
         // Listen for events from clients -------------------
-        socket.on('join', ({ roomId, username }) => {
+        socket.on('join', async ({ roomId, username }) => {
+            console.log(`${username} Joined - ${socket.id}`);
             userSocketMap[socket.id] = username;
             socket.join(roomId);
             const connectedUsers = getAllConnectedClient(roomId);
@@ -36,7 +37,7 @@ const socketListen = (io) => {
             io.to(socketId).emit('code-change', { editorCode });
         })
 
-        // Handle disconnection of an socketId
+        // Handle disconnection of an socketId -------------------------
         socket.on('disconnecting', () => {
             const rooms = [...socket.rooms];
             rooms.forEach((roomId) => {
@@ -52,10 +53,10 @@ const socketListen = (io) => {
             socket.leave();
         })
 
-        // // Handle disconnections
-        // socket.on('disconnect', () => {
-        //     console.log('A user disconnected');
-        // });
+        // Handle disconnections
+        socket.on('disconnect', () => {
+            console.log(`user disconnected - ${socket.id}`);
+        });
     });
 };
 

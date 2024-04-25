@@ -8,7 +8,7 @@ const FileListBar = ({ file, setCurrentSelectedFile }) => {
     }
 
     return (
-        <li className='flex flex-row items-center justify-start gap-2 my-2 btn'
+        <li className={`flex flex-row items-center justify-start gap-2 my-2 btn`}
             onClick={HanleSelectAnewFile}
         ><FaFile />
             <button>
