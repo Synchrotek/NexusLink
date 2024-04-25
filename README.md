@@ -29,8 +29,8 @@ Backend | Frontend
 | :--- | :--- 
 Node.js | React
 Express.js | Socket.io-client
-Socket.io
-MongoDB
+Socket.io | Tailwind
+MongoDB | daisyUI
 
 ## Usage
 - Visit the signup page and create an account.
