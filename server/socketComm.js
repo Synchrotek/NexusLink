@@ -20,10 +20,10 @@ const socketListen = (io) => {
         socket.on('join', ({ roomId, username }) => {
             userSocketMap[socket.id] = username;
             socket.join(roomId);
-            const clients = getAllConnectedClient(roomId);
-            clients.forEach(({ socketId }) => {
+            const connectedUsers = getAllConnectedClient(roomId);
+            connectedUsers.forEach(({ socketId }) => {
                 io.to(socketId).emit('joined', {
-                    clients, username, socketId: socket.id
+                    connectedUsers, username, socketId: socket.id
                 })
             })
         });

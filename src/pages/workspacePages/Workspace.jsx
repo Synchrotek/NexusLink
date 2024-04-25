@@ -18,7 +18,7 @@ const Workspace = () => {
     const reactNavigate = useNavigate();
     const { roomId } = useParams();
 
-    const [clients, setClients] = useState([]);
+    const [connectedUsers, setConnectedUsers] = useState([]);
 
     useEffect(() => {
         const handleErrors = (err) => {
@@ -38,12 +38,12 @@ const Workspace = () => {
             });
 
             //  Listeinging for joined event
-            socketRef.current.on(SOCKET_ACTIONS.JOINED, ({ clients, username, socketId }) => {
+            socketRef.current.on(SOCKET_ACTIONS.JOINED, ({ connectedUsers, username, socketId }) => {
                 if (username !== location.state?.username) {
                     toast.success(`${username} joined the room`);
                     console.log(`${username} joined the room`);
                 }
-                setClients(clients);
+                setConnectedUsers(connectedUsers);
                 socketRef.current.emit(SOCKET_ACTIONS.SYNC_CODE, {
                     editorCode: codeRef.current,
                     socketId
@@ -52,8 +52,8 @@ const Workspace = () => {
 
             socketRef.current.on(SOCKET_ACTIONS.DISCONNECTED, ({ socketId, username }) => {
                 toast.success(`${username} left the room.`);
-                setClients((prev) => {
-                    return prev.filter(client => client.socketId !== socketId)
+                setConnectedUsers((prev) => {
+                    return prev.filter(connectedUser => connectedUser.socketId !== socketId)
                 })
             })
         }
@@ -93,12 +93,12 @@ const Workspace = () => {
                     </h2>
                 </div>
                 <h3>Connected devs :</h3>
-                <div className="##clientList overflow-x-hidden overflow-y-scroll hideScrollBar h-full">
+                <div className="overflow-x-hidden overflow-y-scroll hideScrollBar h-full">
                     <ul className='menu p-4 w-80 bg-base-200 text-base-content'>
-                        {clients.map(client => (
+                        {connectedUsers.map(connectedUser => (
                             <Client
-                                key={client.socketId}
-                                username={client.username}
+                                key={connectedUser.socketId}
+                                username={connectedUser.username}
                             />
                         ))}
                     </ul>
