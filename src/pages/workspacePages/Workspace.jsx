@@ -27,10 +27,12 @@ const Workspace = () => {
     const [editorTheme, setEditorTheme] = useState('vs-dark');
     const [connectedUsers, setConnectedUsers] = useState([]);
     const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
-    const [currentSelectedFile, setCurrentSelectedFile] = useState(EXAMPLE_FILE_LIST[0]);
+    // const [currentSelectedFile, setCurrentSelectedFile] = useState(EXAMPLE_FILE_LIST[0]);
+    const currentSelectedFileRef = useRef('');
 
     const location = useLocation();
     const socketRef = useRef(null);
+    const currentSelectedFileIndexRef = useRef(0);
     const reactNavigate = useNavigate();
     const { roomId } = useParams()
 
@@ -83,13 +85,14 @@ const Workspace = () => {
     }, [location.state?.userDeatils, reactNavigate, roomId]);
 
     useEffect(() => {
-        console.log(files[4]);
-    }, [files])
+        console.log('currentSelectedFileRef: ', currentSelectedFileRef.current);
+    }, [currentSelectedFileRef.current])
 
     const handleFileChange = (newFileContent) => {
         setFiles(prevFiles => {
             const newFiles = prevFiles.map(file => {
-                if (file.fileId === currentSelectedFile.fileId) {
+                if (file.fileId === currentSelectedFileRef.current.fileId) {
+                    currentSelectedFileIndexRef.current = files.indexOf(file);
                     return { ...file, fileContent: newFileContent }
                 } else {
                     return file;
@@ -97,7 +100,7 @@ const Workspace = () => {
             })
             if (socketRef.current) {
                 socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
-                    roomId, files: newFiles, fileId: currentSelectedFile.fileId
+                    roomId, files: newFiles, fileId: currentSelectedFileRef.current.fileId
                 })
             }
             return newFiles;
@@ -108,6 +111,11 @@ const Workspace = () => {
         //     roomId, files, fileId: currentSelectedFile.fileId
         // })
         // }
+    }
+
+    const handleCurrentSelectedFileRefChange = (file) => {
+        currentSelectedFileRef.current = file;
+        console.log(currentSelectedFileRef.current);
     }
 
     const handleCopyRoomId = async () => {
@@ -129,7 +137,6 @@ const Workspace = () => {
     }
 
     return (<div className='##mainwrap h-screen flex p-2'>
-        <ToastContainer />
         <div className="##aside flex flex-col justify-between">
             <div className="##asideInner h-3/5 relative">
                 <div className="##logo p-1">
@@ -141,8 +148,8 @@ const Workspace = () => {
                 <UpperSideBar
                     connectedUsers={connectedUsers}
                     files={files}
-                    currentSelectedFile={currentSelectedFile}
-                    setCurrentSelectedFile={setCurrentSelectedFile}
+                    currentSelectedFileRef={currentSelectedFileRef}
+                    handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
                 />
             </div>
             <div className='flex flex-col w-full gap-4 z-20'>
@@ -157,17 +164,19 @@ const Workspace = () => {
         <div className="w-full py-1 ml-3">
             <WorksapceHeader
                 setEditorLanguage={setEditorLanguage} setEditorTheme={setEditorTheme}
-                currentSelectedFileName={currentSelectedFile.filename}
+                currentSelectedFileRef={currentSelectedFileRef}
             />
             <CodeEditor
                 socketRef={socketRef}
                 setFiles={setFiles}
                 editorLanguage={editorLanguage} editorTheme={editorTheme}
-                currentSelectedFile={currentSelectedFile}
+                handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
+                currentSelectedFileRef={currentSelectedFileRef}
                 handleFileChange={handleFileChange}
-                setCurrentSelectedFile={setCurrentSelectedFile}
+                currentSelectedFileIndexRef={currentSelectedFileIndexRef}
             />
         </div>
+        <ToastContainer position='bottom-right' />
     </div>
     )
 }

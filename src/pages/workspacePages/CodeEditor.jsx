@@ -6,18 +6,19 @@ import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions';
 
 const CodeEditor = ({
     socketRef, setFiles, editorLanguage, editorTheme,
-    currentSelectedFile, handleFileChange, setCurrentSelectedFile
-}) => {
+    currentSelectedFileRef, handleCurrentSelectedFileRefChange, handleFileChange, currentSelectedFileIndexRef
 
+}) => {
     useEffect(() => {
         if (socketRef.current) {
             socketRef.current.on(SOCKET_ACTIONS.CODE_CHANGE, ({ files, fileId }) => {
                 // console.log('-----------------------------');
                 // console.log(files.find(file => file.fileId === fileId));
                 setFiles(files);
-                if (currentSelectedFile.fileId === fileId) {
-                    setCurrentSelectedFile(files.find(file => file.fileId === fileId));
-                }
+                // if (currentSelectedFile.fileId === fileId) {
+                //     setCurrentSelectedFile(files.find(file => file.fileId === fileId));
+                // }
+                handleCurrentSelectedFileRefChange(files[currentSelectedFileIndexRef.current]);
             });
         } else {
             console.log('Socket code-sync error! !!!!!!!!!');
@@ -30,16 +31,12 @@ const CodeEditor = ({
         };
     }, [socketRef.current, setFiles]);
 
-    useEffect(() => {
-        console.log(currentSelectedFile.filename);
-    }, [currentSelectedFile])
-
     return (
         <Editor className='bg pt-2'
             width="100%" height="90%"
             theme={editorTheme}
             language={editorLanguage}
-            value={currentSelectedFile.fileContent}
+            value={currentSelectedFileRef.current.fileContent}
             onChange={handleFileChange}
         />
     )

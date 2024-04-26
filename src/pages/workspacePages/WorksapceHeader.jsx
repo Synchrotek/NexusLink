@@ -1,9 +1,12 @@
+/* eslint-disable react/prop-types */
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdMessage } from "react-icons/md";
+import { useEffect } from "react";
 
 const WorksapceHeader = ({
-    isCodeEditorPage, setEditorLanguage, setEditorTheme, currentSelectedFileName
+    isCodeEditorPage, setEditorLanguage, setEditorTheme, currentSelectedFileRef
 }) => {
+    console.log(currentSelectedFileRef.current);
     // Editor dynamic properties -------------------------------------
     const languagesAvailable = [
         'javaScript', 'typeScript',
@@ -24,7 +27,7 @@ const WorksapceHeader = ({
     const EditorPageHeader = () => (
         <>
             <h1 className="h-5/6">
-                {currentSelectedFileName}
+                {currentSelectedFileRef.current.filename}
             </h1>
             <div className="">
 
