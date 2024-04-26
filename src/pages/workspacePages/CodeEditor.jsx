@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Editor } from '@monaco-editor/react'
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions';
+import { WorkspaceContext } from '../../context/WorkspaceProvider';
 
 const CodeEditor = ({
     socketRef, setFiles, editorLanguage, editorTheme,
-    currentSelectedFileRef, handleCurrentSelectedFileRefChange, handleFileChange, currentSelectedFileIndexRef
+    handleCurrentSelectedFileRefChange, handleFileChange
 
 }) => {
+    const { currentSelectedFile, currentSelectedFileIndexRef } = useContext(WorkspaceContext);
     useEffect(() => {
         if (socketRef.current) {
             socketRef.current.on(SOCKET_ACTIONS.CODE_CHANGE, ({ files, fileId }) => {
@@ -36,7 +38,7 @@ const CodeEditor = ({
             width="100%" height="90%"
             theme={editorTheme}
             language={editorLanguage}
-            value={currentSelectedFileRef.current.fileContent}
+            value={currentSelectedFile.fileContent}
             onChange={handleFileChange}
         />
     )

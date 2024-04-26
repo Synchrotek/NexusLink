@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import CodeEditor from './CodeEditor';
 import WorksapceHeader from './WorksapceHeader';
 import UpperSideBar from './UpperSideBar.jsx';
@@ -7,37 +7,36 @@ import { useLocation, useNavigate, Navigate, useParams } from 'react-router-dom'
 import { initSocket } from '../../utils/socketConn/socket';
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions.js';
 import { ToastContainer, toast } from 'react-toastify';
+import { WorkspaceContext } from '../../context/WorkspaceProvider.jsx';
 
 // delete here
 const EXAMPLE_FILE_LIST = [
-    { fileId: 1, filename: 'Main1.py', fileContent: '' },
-    { fileId: 2, filename: 'Main2.py', fileContent: '' },
-    { fileId: 3, filename: 'Main3.py', fileContent: '' },
-    { fileId: 4, filename: 'Main4.py', fileContent: '' },
-    { fileId: 5, filename: 'Main5.py', fileContent: '' },
-    { fileId: 6, filename: 'Main6.py', fileContent: '' },
-    { fileId: 7, filename: 'Main7.py', fileContent: '' },
-    { fileId: 8, filename: 'Main8.py', fileContent: '' },
-    { fileId: 9, filename: 'Main9.py', fileContent: '' },
-    { fileId: 10, filename: 'Main10.py', fileContent: '' },
+    { fileId: 1, filename: 'Main1.py', fileContent: '1' },
+    { fileId: 2, filename: 'Main2.py', fileContent: '2' },
+    { fileId: 3, filename: 'Main3.py', fileContent: '3' },
+    { fileId: 4, filename: 'Main4.py', fileContent: '4' },
+    { fileId: 5, filename: 'Main5.py', fileContent: '5' },
+    { fileId: 6, filename: 'Main6.py', fileContent: '6' },
+    { fileId: 7, filename: 'Main7.py', fileContent: '7' },
+    { fileId: 8, filename: 'Main8.py', fileContent: '8' },
+    { fileId: 9, filename: 'Main9.py', fileContent: '9' },
+    { fileId: 10, filename: 'Main10.py', fileContent: '10' },
 ]
 
 const Workspace = () => {
+    const { currentSelectedFile, setCurrentSelectedFile, currentSelectedFileIndexRef } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
     const [connectedUsers, setConnectedUsers] = useState([]);
     const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
-    // const [currentSelectedFile, setCurrentSelectedFile] = useState(EXAMPLE_FILE_LIST[0]);
-    const currentSelectedFileRef = useRef('');
 
     const location = useLocation();
     const socketRef = useRef(null);
-    const currentSelectedFileIndexRef = useRef(0);
     const reactNavigate = useNavigate();
     const { roomId } = useParams()
 
     useEffect(() => {
-        console.log('UseEffect called ----------------------------');
+        // console.log('UseEffect called ----------------------------');
         const handleErrors = (err) => {
             console.log('Socket error: ', err);
             toast.error('Socket connection failed, try again later');
@@ -85,14 +84,14 @@ const Workspace = () => {
     }, [location.state?.userDeatils, reactNavigate, roomId]);
 
     useEffect(() => {
-        console.log('currentSelectedFileRef: ', currentSelectedFileRef.current);
-    }, [currentSelectedFileRef.current])
+        console.log('currentSelectedFile: ', currentSelectedFile.filename);
+    }, [currentSelectedFile])
 
     const handleFileChange = (newFileContent) => {
         setFiles(prevFiles => {
             const newFiles = prevFiles.map(file => {
-                if (file.fileId === currentSelectedFileRef.current.fileId) {
-                    currentSelectedFileIndexRef.current = files.indexOf(file);
+                if (file.fileId === currentSelectedFile.fileId) {
+                    // currentSelectedFileIndexRef.current = files.indexOf(file);
                     return { ...file, fileContent: newFileContent }
                 } else {
                     return file;
@@ -100,7 +99,7 @@ const Workspace = () => {
             })
             if (socketRef.current) {
                 socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
-                    roomId, files: newFiles, fileId: currentSelectedFileRef.current.fileId
+                    roomId, files: newFiles, fileId: currentSelectedFile.fileId
                 })
             }
             return newFiles;
@@ -114,8 +113,10 @@ const Workspace = () => {
     }
 
     const handleCurrentSelectedFileRefChange = (file) => {
-        currentSelectedFileRef.current = file;
-        console.log(currentSelectedFileRef.current);
+        setCurrentSelectedFile(file);
+        // currentSelectedFileIndexRef.current = files.indexOf(file);
+        // console.log('file clicked: ', files.indexOf(file));
+        console.log('file clicked:', currentSelectedFileIndexRef.current);
     }
 
     const handleCopyRoomId = async () => {
@@ -137,8 +138,8 @@ const Workspace = () => {
     }
 
     return (<div className='##mainwrap h-screen flex p-2'>
-        <div className="##aside flex flex-col justify-between">
-            <div className="##asideInner h-3/5 relative">
+        <div className="flex flex-col justify-between">
+            <div className="h-3/5 relative">
                 <div className="##logo p-1">
                     <h2 className='gifLogoAnimation h-14 text-xl text-white font-mono flex justify-center items-center'>
                         Synchrotek
@@ -148,7 +149,6 @@ const Workspace = () => {
                 <UpperSideBar
                     connectedUsers={connectedUsers}
                     files={files}
-                    currentSelectedFileRef={currentSelectedFileRef}
                     handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
                 />
             </div>
@@ -164,16 +164,13 @@ const Workspace = () => {
         <div className="w-full py-1 ml-3">
             <WorksapceHeader
                 setEditorLanguage={setEditorLanguage} setEditorTheme={setEditorTheme}
-                currentSelectedFileRef={currentSelectedFileRef}
             />
             <CodeEditor
                 socketRef={socketRef}
                 setFiles={setFiles}
                 editorLanguage={editorLanguage} editorTheme={editorTheme}
                 handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
-                currentSelectedFileRef={currentSelectedFileRef}
                 handleFileChange={handleFileChange}
-                currentSelectedFileIndexRef={currentSelectedFileIndexRef}
             />
         </div>
         <ToastContainer position='bottom-right' />
