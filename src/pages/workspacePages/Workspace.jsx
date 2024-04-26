@@ -10,16 +10,16 @@ import { ToastContainer, toast } from 'react-toastify';
 
 // delete here
 const EXAMPLE_FILE_LIST = [
-    { fileId: 1, filename: 'Main1.py', fileContent: '//First WRite some code here' },
-    { fileId: 2, filename: 'Main2.py', fileContent: '//WRite2 some code here' },
-    { fileId: 3, filename: 'Main3.py', fileContent: '//WRite3 some code here' },
-    { fileId: 4, filename: 'Main4.py', fileContent: '//WRite4 some code here' },
-    { fileId: 5, filename: 'Main5.py', fileContent: '//WRite5 some code here' },
-    { fileId: 6, filename: 'Main6.py', fileContent: '//WRite6 some code here' },
-    { fileId: 7, filename: 'Main7.py', fileContent: '//WRite7 some code here' },
-    { fileId: 8, filename: 'Main8.py', fileContent: '//WRite8 some code here' },
-    { fileId: 9, filename: 'Main9.py', fileContent: '//WRite9 some code here' },
-    { fileId: 10, filename: 'Main10.py', fileContent: '//WRite10 some code here' },
+    { fileId: 1, filename: 'Main1.py', fileContent: '' },
+    { fileId: 2, filename: 'Main2.py', fileContent: '' },
+    { fileId: 3, filename: 'Main3.py', fileContent: '' },
+    { fileId: 4, filename: 'Main4.py', fileContent: '' },
+    { fileId: 5, filename: 'Main5.py', fileContent: '' },
+    { fileId: 6, filename: 'Main6.py', fileContent: '' },
+    { fileId: 7, filename: 'Main7.py', fileContent: '' },
+    { fileId: 8, filename: 'Main8.py', fileContent: '' },
+    { fileId: 9, filename: 'Main9.py', fileContent: '' },
+    { fileId: 10, filename: 'Main10.py', fileContent: '' },
 ]
 
 const Workspace = () => {
@@ -30,13 +30,12 @@ const Workspace = () => {
     const [currentSelectedFile, setCurrentSelectedFile] = useState(EXAMPLE_FILE_LIST[0]);
 
     const location = useLocation();
-    const codeRef = useRef(null);
     const socketRef = useRef(null);
     const reactNavigate = useNavigate();
     const { roomId } = useParams()
 
     useEffect(() => {
-        setCurrentSelectedFile(EXAMPLE_FILE_LIST[0]);
+        console.log('UseEffect called ----------------------------');
         const handleErrors = (err) => {
             console.log('Socket error: ', err);
             toast.error('Socket connection failed, try again later');
@@ -61,31 +60,54 @@ const Workspace = () => {
                 }
                 setConnectedUsers(connectedUsers);
                 socketRef.current.emit(SOCKET_ACTIONS.SYNC_CODE, {
-                    editorCode: codeRef.current,
+                    files,
                     socketId
                 });
-            })
+            });
 
             socketRef.current.on(SOCKET_ACTIONS.DISCONNECTED, ({ socketId, username }) => {
                 toast.success(`${username} left the room.`);
                 setConnectedUsers((prev) => {
                     return prev.filter(connectedUser => connectedUser.socketId !== socketId)
                 })
-            })
+            });
+
         }
         initScoketClient();
         return () => {
             socketRef.current.off(SOCKET_ACTIONS.JOINED);
+            // socketRef.current.off(SOCKET_ACTIONS.CODE_CHANGE);
             socketRef.current.off(SOCKET_ACTIONS.DISCONNECTED);
             socketRef.current.disconnect();
         }
-    }, [location.state?.userDeatils, reactNavigate, roomId])
+    }, [location.state?.userDeatils, reactNavigate, roomId]);
 
+    useEffect(() => {
+        console.log(files[4]);
+    }, [files])
 
     const handleFileChange = (newFileContent) => {
-        setFiles(prevFiles =>
-            prevFiles.map(file => (file.fileId === currentSelectedFile.fileId ? { ...file, fileContent: newFileContent } : file))
-        );
+        setFiles(prevFiles => {
+            const newFiles = prevFiles.map(file => {
+                if (file.fileId === currentSelectedFile.fileId) {
+                    return { ...file, fileContent: newFileContent }
+                } else {
+                    return file;
+                }
+            })
+            if (socketRef.current) {
+                socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
+                    roomId, files: newFiles, fileId: currentSelectedFile.fileId
+                })
+            }
+            return newFiles;
+        });
+        // console.log(files[0]);
+        // if (socketRef.current) {
+        // socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
+        //     roomId, files, fileId: currentSelectedFile.fileId
+        // })
+        // }
     }
 
     const handleCopyRoomId = async () => {
@@ -139,13 +161,11 @@ const Workspace = () => {
             />
             <CodeEditor
                 socketRef={socketRef}
-                roomId={roomId}
-                onCodeChange={(editorCode) => {
-                    codeRef.current = editorCode;
-                }}
+                setFiles={setFiles}
                 editorLanguage={editorLanguage} editorTheme={editorTheme}
                 currentSelectedFile={currentSelectedFile}
                 handleFileChange={handleFileChange}
+                setCurrentSelectedFile={setCurrentSelectedFile}
             />
         </div>
     </div>

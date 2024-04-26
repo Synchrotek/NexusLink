@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
+import { useEffect } from "react";
 import { FaFile } from "react-icons/fa";
 
-const FileListBar = ({ file, setCurrentSelectedFile }) => {
-
+const FileListBar = ({ file, currentSelectedFile, setCurrentSelectedFile }) => {
     const HanleSelectAnewFile = () => {
+        // console.log('FROM FL:', file);
         setCurrentSelectedFile(file);
     }
 

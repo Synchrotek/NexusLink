@@ -8,7 +8,12 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: process.env.CLIENT_URL,
+        methods: ["GET", "POST"]
+    }
+});
 app.use(cors({
     origin: process.env.CLIENT_URL,
     optionsSuccessStatus: 200, // For legacy browser support
@@ -20,8 +25,8 @@ const userRoutes = require('./routes/user.route.js');
 
 // socket.io listener ------------------------------
 const socketListen = require('./socketComm.js')
-const socketCommunication1 = require('./socketConn/socket.communication1.js');
 socketListen(io);
+// const socketCommunication1 = require('./socketConn-test/socket.communication1.js');
 // socketCommunication1(io);
 
 // Import global middlewares -----------------------
