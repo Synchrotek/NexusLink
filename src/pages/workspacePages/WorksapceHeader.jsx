@@ -26,6 +26,11 @@ const WorksapceHeader = ({
         return (location.pathname === path);
     }
 
+    useEffect(() => {
+        console.log('currentSelectedFile: ', currentSelectedFile);
+        console.log('currentSelectedFileName: ', currentSelectedFile.filename);
+    }, [currentSelectedFile])
+
     const EditorPageHeader = () => (
         <>
             <h1 className="h-5/6">

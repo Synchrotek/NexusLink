@@ -20,7 +20,8 @@ const CodeEditor = ({
                 // if (currentSelectedFile.fileId === fileId) {
                 //     setCurrentSelectedFile(files.find(file => file.fileId === fileId));
                 // }
-                handleCurrentSelectedFileRefChange(files[currentSelectedFileIndex.current]);
+                // console.log(currentSelectedFile, currentSelectedFileIndex);
+                handleCurrentSelectedFileRefChange(files[currentSelectedFileIndex]);
             });
         } else {
             console.log('Socket code-sync error! !!!!!!!!!');
