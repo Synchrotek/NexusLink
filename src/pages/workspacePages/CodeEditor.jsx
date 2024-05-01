@@ -10,7 +10,7 @@ const CodeEditor = ({
     handleCurrentSelectedFileRefChange, handleFileChange
 
 }) => {
-    const { currentSelectedFile, currentSelectedFileIndexRef } = useContext(WorkspaceContext);
+    const { currentSelectedFile, currentSelectedFileIndex } = useContext(WorkspaceContext);
     useEffect(() => {
         if (socketRef.current) {
             socketRef.current.on(SOCKET_ACTIONS.CODE_CHANGE, ({ files, fileId }) => {
@@ -20,7 +20,7 @@ const CodeEditor = ({
                 // if (currentSelectedFile.fileId === fileId) {
                 //     setCurrentSelectedFile(files.find(file => file.fileId === fileId));
                 // }
-                handleCurrentSelectedFileRefChange(files[currentSelectedFileIndexRef.current]);
+                handleCurrentSelectedFileRefChange(files[currentSelectedFileIndex.current]);
             });
         } else {
             console.log('Socket code-sync error! !!!!!!!!!');

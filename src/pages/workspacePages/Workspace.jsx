@@ -83,10 +83,6 @@ const Workspace = () => {
         }
     }, [location.state?.userDeatils, reactNavigate, roomId]);
 
-    useEffect(() => {
-        console.log('currentSelectedFile: ', currentSelectedFile.filename);
-    }, [currentSelectedFile])
-
     const handleFileChange = (newFileContent) => {
         setFiles(prevFiles => {
             const newFiles = prevFiles.map(file => {
@@ -114,9 +110,7 @@ const Workspace = () => {
 
     const handleCurrentSelectedFileRefChange = (file) => {
         setCurrentSelectedFile(file);
-        // currentSelectedFileIndexRef.current = files.indexOf(file);
         // console.log('file clicked: ', files.indexOf(file));
-        console.log('file clicked:', currentSelectedFileIndexRef.current);
     }
 
     const handleCopyRoomId = async () => {
