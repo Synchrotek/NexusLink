@@ -8,6 +8,7 @@ import { initSocket } from '../../utils/socketConn/socket';
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions.js';
 import { ToastContainer, toast } from 'react-toastify';
 import { WorkspaceContext } from '../../context/WorkspaceProvider.jsx';
+import ChatPage from '../chatPages/ChatPage.jsx';
 
 // delete here
 const EXAMPLE_FILE_LIST = [
@@ -27,6 +28,7 @@ const Workspace = () => {
     const { currentSelectedFile, setCurrentSelectedFile, currentSelectedFileIndexRef } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
+    const [isChatSelected, setIsChatSelected] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState([]);
     const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
 
@@ -82,6 +84,10 @@ const Workspace = () => {
             socketRef.current.disconnect();
         }
     }, [location.state?.userDeatils, reactNavigate, roomId]);
+
+    const toggleIsChatSelected = () => {
+        setIsChatSelected(prevIsChatSelected => !prevIsChatSelected);
+    }
 
     const handleFileChange = (newFileContent) => {
         setFiles(prevFiles => {
@@ -158,14 +164,20 @@ const Workspace = () => {
         <div className="w-full py-1 ml-3">
             <WorksapceHeader
                 setEditorLanguage={setEditorLanguage} setEditorTheme={setEditorTheme}
+                isChatSelected={isChatSelected}
+                toggleIsChatSelected={toggleIsChatSelected}
             />
-            <CodeEditor
-                socketRef={socketRef}
-                setFiles={setFiles}
-                editorLanguage={editorLanguage} editorTheme={editorTheme}
-                handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
-                handleFileChange={handleFileChange}
-            />
+            {isChatSelected ? (
+                <ChatPage />
+            ) : (
+                <CodeEditor
+                    socketRef={socketRef}
+                    setFiles={setFiles}
+                    editorLanguage={editorLanguage} editorTheme={editorTheme}
+                    handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
+                    handleFileChange={handleFileChange}
+                />
+            )}
         </div>
         <ToastContainer position='bottom-right' />
     </div>

@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdMessage } from "react-icons/md";
+import { FaCode } from "react-icons/fa";
 import { useContext, useEffect } from "react";
 import { WorkspaceContext } from "../../context/WorkspaceProvider";
 
 const WorksapceHeader = ({
-    isCodeEditorPage, setEditorLanguage, setEditorTheme
+    setEditorLanguage, setEditorTheme, isChatSelected, toggleIsChatSelected
 }) => {
     const { currentSelectedFile } = useContext(WorkspaceContext);
 
@@ -31,7 +32,7 @@ const WorksapceHeader = ({
         console.log('currentSelectedFileName: ', currentSelectedFile.filename);
     }, [currentSelectedFile])
 
-    const EditorPageHeader = () => (
+    const WorksapcePageHeader = () => (
         <>
             <h1 className="h-5/6">
                 {currentSelectedFile.filename}
@@ -62,22 +63,21 @@ const WorksapceHeader = ({
                 </select>
 
                 {/* ---------------------------------------------------- */}
-                <button className="btn tooltip tooltip-bottom w-14 mx-1 flex justify-center" data-tip="Go to Chats">
-                    <MdMessage
-                        className="text-lg"
-                    />
+                <button className="btn tooltip tooltip-bottom w-14 mx-1 flex justify-center" data-tip="Go to Chats"
+                    onClick={toggleIsChatSelected}
+                >
+                    {isChatSelected ? (
+                        <FaCode />
+                    ) : (
+                        <MdMessage className="text-lg" />
+                    )}
                 </button>
             </div >
         </>);
 
-
-    const ChatPageHeader = () => { };
-
     return (
         <div className={`navbar bg-slate-600 flex justify-between max-h-16`}>
-            {isCodeEditorPage ?
-                ChatPageHeader() : EditorPageHeader()
-            }
+            {WorksapcePageHeader()}
         </div>
 
 
