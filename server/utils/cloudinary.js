@@ -17,6 +17,7 @@ const uploadOnCloudinary = async (localFilePath) => {
             folder: 'CollabCode',
         });
         console.log(response);
+        fs.unlinkSync(localFilePath);
         return { status: 'success', response };
     } catch (error) {
         fs.unlinkSync(localFilePath);

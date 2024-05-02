@@ -14,6 +14,7 @@ const MessageComponent = ({ message, currentUserId }) => {
         <div className="chat-bubble p-2">{content}
             {attachments.length > 0 && attachments.map((attachment, index) => {
                 const url = attachment.url;
+                const filename = attachment.public_id;
                 const fileType = fileFormat(url);
 
                 return <div key={index}>
@@ -21,7 +22,7 @@ const MessageComponent = ({ message, currentUserId }) => {
                         target='_blank'
                         download
                     >
-                        {RenderAttachment(fileType, url)}
+                        {RenderAttachment(fileType, url, filename)}
                     </a>
                 </div>
             })}

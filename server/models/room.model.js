@@ -23,15 +23,28 @@ const roomSchema = new mongoose.Schema({
         required: true,
         unique: false,
     },
-    roomPicture: {
-        type: String,
-        trim: true,
-        // required: true,
-    },
     description: {
         type: String,
         trim: true,
     },
+    files: [
+        {
+            filename: {
+                type: String,
+                required: true,
+            },
+            fileContent: {
+                type: String,
+                required: true,
+            },
+            language: {
+                type: String,
+                required: true,
+            },
+        }
+    ]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Room', roomSchema);
+
+// { fileId: 1, filename: 'Main1.py', fileContent: '1' },

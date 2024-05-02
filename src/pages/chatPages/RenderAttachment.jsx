@@ -1,7 +1,7 @@
-import React from 'react'
+import { FaFileDownload } from "react-icons/fa";
 import { transformImage } from './fileFearures'
 
-const RenderAttachment = (fileType, url) => {
+const RenderAttachment = (fileType, url, filename) => {
     switch (fileType) {
         case "video":
             return (
@@ -21,7 +21,10 @@ const RenderAttachment = (fileType, url) => {
 
         default:
             return (
-                <div className='border'>Sent File</div>
+                <div className='p-1 flex items-center gap-1'>
+                    <FaFileDownload />
+                    {filename}
+                </div>
             )
     }
 }

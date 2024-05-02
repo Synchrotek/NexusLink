@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import CodeEditor from './CodeEditor';
 import WorksapceHeader from './WorksapceHeader';
 import UpperSideBar from './UpperSideBar.jsx';
@@ -34,7 +34,7 @@ const Workspace = () => {
     } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
-    const [isChatSelected, setIsChatSelected] = useState(true);
+    const [isChatSelected, setIsChatSelected] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState([]);
     const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
 
@@ -66,7 +66,10 @@ const Workspace = () => {
             if (allDbFetchedMessages.length > 0) {
                 const isAlreayPushed = allMessages[allMessages.length - 1]._id ===
                     allDbFetchedMessages[allDbFetchedMessages.length - 1]._id;
-                if (isAlreayPushed) return;
+                if (isAlreayPushed) {
+                    console.log('ALREADY PUSHED ------------------------------');
+                    return;
+                };
             }
             await axios({
                 method: 'POST',
@@ -143,8 +146,6 @@ const Workspace = () => {
     const toggleIsChatSelected = () => {
         if (isChatSelected) {
             pushToDbMessages();
-        } else {
-            fetchDbMessages();
         }
         setIsChatSelected(prevIsChatSelected => !prevIsChatSelected);
     }

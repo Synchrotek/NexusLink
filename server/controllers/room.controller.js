@@ -8,7 +8,12 @@ exports.createNewRoom = async (req, res) => {
                 message: 'ROOM_EXISTS'
             });
         }
-        const newRoom = new Room({ roomId, creatorId });
+        const newRoom = new Room({
+            roomId, creatorId,
+            files: {
+                filename: 'Main1', fileContent: '// Hello world', language: 'javascript'
+            }
+        });
         console.log(newRoom);
         await newRoom.save().then(result => {
             return res.status(201).json({
@@ -35,6 +40,36 @@ exports.getAllRooms = async (req, res) => {
         console.log('FETCHING ALL ROOMS IN DATABASE ERROR', err);
         return res.status(400).json({
             error: 'Error fetching rooms. Please try again'
+        });
+    })
+}
+
+exports.updateFilesInRoom = async (req, res) => {
+    const { roomId, files } = req.body;
+    await Room.findOne({ roomId }).then(async (existingRoom) => {
+        if (!existingRoom) {
+            return res.status(400).json({
+                error: 'This room does not exists'
+            });
+        }
+
+        await Room.findByIdAndUpdate(
+            { _id: existingRoom._id },
+            { files }
+        ).then(result => {
+            res.status(200).json({
+                message: 'Filelist updated successfully'
+            })
+        }).catch(err => {
+            console.log('UPDATING FILES LIST ERROR', err)
+            return res.status(500).json({
+                error: 'UPDATING FILES LIST ERROR'
+            });
+        })
+    }).catch((err) => {
+        console.log('FINDING ROOM IN DATABASE ERROR', err);
+        return res.status(400).json({
+            error: 'Error FINDING room. Please try again'
         });
     })
 }

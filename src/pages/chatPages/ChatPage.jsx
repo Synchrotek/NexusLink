@@ -96,7 +96,7 @@ const ChatPage = ({ isChatSelected, roomId, fetchDbMessages }) => {
         if (selectedFileData) {
             const uploadedFileData = await uploadFileToDb();
             uploaeAttachments = [{
-                public_id: uploadedFileData.public_id,
+                public_id: uploadedFileData.original_filename,
                 url: uploadedFileData.url
             }]
         }
@@ -126,7 +126,7 @@ const ChatPage = ({ isChatSelected, roomId, fetchDbMessages }) => {
     return (<div className={`absolute z-20 w-full h-[90%] transition-all
     ${isChatSelected ? 'right-0' : '-right-[110%]'}
     `}>
-        <div className='bg-orange-400 w-full h-[90%] text-black overflow-y-scroll'>
+        <div className='bg-orange-400 w-full h-[90%] text-black overflow-y-scroll hideScrollBar'>
             {allDbFetchedMessages.map((msg) => (
                 <MessageComponent key={`${msg.createdAt}${msg.content}`}
                     message={msg} currentUserId={currentUser._id}
