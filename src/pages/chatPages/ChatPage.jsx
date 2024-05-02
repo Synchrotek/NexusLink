@@ -9,8 +9,9 @@ import SOCKET_ACTIONS from "../../utils/socketConn/SocketActions.js";
 
 const ChatPage = ({ socketRef, roomId }) => {
     const currentUser = JSON.parse(localStorage.getItem('user'));
-    const [selectedFileData, setSelectedFileData] = useState(undefined)
     const [allMessages, setAllMessages] = useState([]);
+    const [selectedFileData, setSelectedFileData] = useState(undefined)
+    const [loader, setLoader] = useState(false);
     const [currentMessageInput, setCurrentMessageInput] = useState(
         {
             attachments: [
@@ -44,30 +45,12 @@ const ChatPage = ({ socketRef, roomId }) => {
     }, [socketRef.current])
 
     useEffect(() => {
-        console.log(selectedFileData);
-    }, [selectedFileData])
-
-    const sendMessage = (e) => {
-        e.preventDefault();
-        uploadFileToDb();
-        // const messageObject = {
-        //     ...currentMessageInput,
-        //     createdAt: new Date().toISOString(),
-        //     attachments: []
-        // }
-        // if (socketRef.current) {
-        //     socketRef.current.emit(SOCKET_ACTIONS.MESSAGE, {
-        //         messageObject,
-        //         roomId,
-        //         senderObject: currentUser,
-        //     });
-        // }
-        // setCurrentMessageInput(prevMessageInput => {
-        //     return { ...prevMessageInput, content: '' }
-        // });
-    }
+        console.log(allMessages);
+    }, [allMessages])
 
     const uploadFileToDb = async () => {
+        let uploadedFileData = "";
+        setLoader(true);
         const token = getCookie('token');
         const formData = new FormData();
         formData.append('attachment', selectedFileData);
@@ -79,9 +62,41 @@ const ChatPage = ({ socketRef, roomId }) => {
             },
             data: formData
         }).then(response => {
-            console.log(response.data);
+            uploadedFileData = response.data.response;
+            console.log(uploadedFileData);
         }).catch(err => {
             console.log('UPLOAD ATTACHMENT ERROR', err.response.data);
+        });
+        setSelectedFileData(undefined);
+        setLoader(false);
+        return uploadedFileData;
+    }
+
+    const sendMessage = async (e) => {
+        console.log('btn clicked ---------------------');
+        e.preventDefault();
+        let uploaeAttachments;
+        if (selectedFileData) {
+            const uploadedFileData = await uploadFileToDb();
+            uploaeAttachments = [{
+                public_id: uploadedFileData.public_id,
+                url: uploadedFileData.url
+            }]
+        }
+        const messageObject = {
+            ...currentMessageInput,
+            createdAt: new Date().toISOString(),
+            attachments: uploaeAttachments || []
+        }
+        if (socketRef.current) {
+            socketRef.current.emit(SOCKET_ACTIONS.MESSAGE, {
+                messageObject,
+                roomId,
+                senderObject: currentUser,
+            });
+        }
+        setCurrentMessageInput(prevMessageInput => {
+            return { ...prevMessageInput, content: '' }
         });
     }
 
@@ -113,7 +128,8 @@ const ChatPage = ({ socketRef, roomId }) => {
                 value={selectedFileData ? selectedFileData.name : currentMessageInput.content}
                 onChange={handleInputChange}
             />
-            <button className='btn text-white hover:bg-slate-700 hover:text-xl transition-all'
+            <button className={`btn text-white hover:bg-slate-700 hover:text-xl transition-all
+            ${loader ? 'loading' : ''}`}
                 onClick={sendMessage}
             ><FiSend />
             </button>
