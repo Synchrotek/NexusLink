@@ -1,13 +1,94 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import Layout from './Layout.jsx'
+import { getCookie } from '../utils/authUtils/helper.jsx';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+    const navigate = useNavigate();
+    const [allRooms, setAllRooms] = useState([]);
+
+    useEffect(() => {
+        getAllRooms();
+    }, []);
+
+    const getAllRooms = async () => {
+        const token = getCookie('token');
+        await axios({
+            method: 'GET',
+            url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/rooms`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        }).then(response => {
+            console.log('ALL ROOMS GET', response);
+            const allFetchedRooms = response.data;
+            setAllRooms(allFetchedRooms);
+        }).catch(err => {
+            console.log('ROOM CREATE ERROR', err.response.data);
+            toast.error(err.response.data.error);
+        });
+    }
+
+    const handleJoinRoom = (currentRoomId) => {
+        navigate(`/room`, {
+            state: {
+                roomId: currentRoomId
+            }
+        });
+    }
+    const handleDeleteRoom = async (currentRoomId) => {
+        const token = getCookie('token');
+        const currentUser = JSON.parse(localStorage.getItem('user'));
+        const dataToSend = {
+            roomId: currentRoomId,
+            givenCreatorId: currentUser._id
+        }
+        await axios({
+            method: 'POST',
+            url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/rooms/delete`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: dataToSend
+        }).then(response => {
+            console.log(response.data);
+        }).catch(err => {
+            console.log('ROOM CREATE ERROR', err.response.data);
+            toast.error(err.response.data.error);
+        });
+    }
+
     return (
         <Layout>
             <div className="col-d-6 offset-md-1 text-center">
                 <h1 className='p-5'>
-                    Home Page
+                    All existing rooms
                 </h1>
+                <hr />
+                <div className='flex flex-wrap'>
+                    {allRooms.length > 0 && allRooms.map(eachRoom => (
+                        <div className="card w-1/2 bg-base-100 shadow-xl" key={eachRoom._id}>
+                            <figure className="px-10 pt-10">
+                                <img src="" alt="RooomImage" className="rounded-xl" />
+                            </figure>
+                            <div className="card-body items-center text-center">
+                                <h2 className="card-title">{eachRoom.roomId}</h2>
+                                <p>Creator: {eachRoom.creatorId}</p>
+                                <p>Created on: {eachRoom.createdAt}</p>
+                                <div className="card-actions">
+                                    <button className="btn btn-primary"
+                                        onClick={() => handleJoinRoom(eachRoom.roomId)}
+                                    >Join Room</button>
+                                    <button className="btn btn-error"
+                                        onClick={() => handleDeleteRoom(eachRoom.roomId)}
+                                    >Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </Layout>
     )

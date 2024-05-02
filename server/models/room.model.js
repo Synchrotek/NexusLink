@@ -3,13 +3,13 @@ const crypto = require('crypto');
 
 // Room schema ----------------------------------------
 const roomSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        trim: true,
-        // required: true,
-        unique: true,
-        max: 20
-    },
+    // name: {
+    //     type: String,
+    //     trim: true,
+    //     // required: true,
+    //     // unique: true,
+    //     max: 20
+    // },
     roomId: {
         type: String,
         trim: true,
@@ -20,7 +20,8 @@ const roomSchema = new mongoose.Schema({
     creatorId: {
         type: mongoose.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        unique: false,
     },
     roomPicture: {
         type: String,

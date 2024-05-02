@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
 import { v4 as uuidV4, validate } from 'uuid'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
+import axios from 'axios'
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from './Layout'
+import { getCookie } from '../utils/authUtils/helper'
 
 const RoomSelect = () => {
     const currentUser = JSON.parse(localStorage.getItem('user'));
+    const token = getCookie('token');
 
+    const location = useLocation();
     const navigate = useNavigate();
     const [values, setValues] = useState({
-        roomId: '',
+        roomId: location.state?.roomId || '',
         username: currentUser.name,
         loading: false
     });
@@ -29,8 +33,9 @@ const RoomSelect = () => {
         toast.success('New roomId creeated');
     }
 
-    const handleJoinRoom = (e) => {
+    const handleJoinRoom = async (e) => {
         e.preventDefault();
+        // console.log('TO SEND REQUEST', currentUser._id, values.roomId);
         if (!values.roomId || !values.username) {
             return toast.error('ROOM ID & Username is required');
         }
@@ -42,6 +47,25 @@ const RoomSelect = () => {
             username: values.username,
             name, email, profilePic, bio, createdAt
         }
+        const dataToSendToDB = {
+            roomId: values.roomId,
+            creatorId: currentUser._id,
+        }
+        await axios({
+            method: 'POST',
+            url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/rooms/new`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: dataToSendToDB
+        }).then(response => {
+            console.log(response);
+        }).catch(err => {
+            console.log('ROOM CREATE ERROR', err.response.data);
+            toast.error(err.response.data.error);
+        });
+
+
         navigate(`/room/${values.roomId}`, {
             state: {
                 userDeatils: tobeSendUsername
