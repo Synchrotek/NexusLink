@@ -6,7 +6,6 @@ const messageSchema = new mongoose.Schema({
     room: {
         type: mongoose.Types.ObjectId,
         ref: 'Room',
-        unique: true,
         required: true
     },
     sender: {

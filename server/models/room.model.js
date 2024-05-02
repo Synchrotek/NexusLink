@@ -7,9 +7,17 @@ const roomSchema = new mongoose.Schema({
         type: String,
         trim: true,
         // required: true,
+        unique: true,
         max: 20
     },
-    creator: {
+    roomId: {
+        type: String,
+        trim: true,
+        required: true,
+        unique: true,
+        max: 20
+    },
+    creatorId: {
         type: mongoose.Types.ObjectId,
         ref: 'User',
         required: true
