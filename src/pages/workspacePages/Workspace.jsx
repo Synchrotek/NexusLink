@@ -9,6 +9,7 @@ import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions.js';
 import { ToastContainer, toast } from 'react-toastify';
 import { WorkspaceContext } from '../../context/WorkspaceProvider.jsx';
 import ChatPage from '../chatPages/ChatPage.jsx';
+import axios from 'axios';
 
 // delete here
 const EXAMPLE_FILE_LIST = [
@@ -25,7 +26,12 @@ const EXAMPLE_FILE_LIST = [
 ]
 
 const Workspace = () => {
-    const { currentSelectedFile, setCurrentSelectedFile, currentSelectedFileIndexRef } = useContext(WorkspaceContext);
+    const {
+        socketRef, token,
+        currentSelectedFile, setCurrentSelectedFile,
+        allDbFetchedMessages, setAllDbFetchedMessages,
+        allMessages, setAllMessages,
+    } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
     const [isChatSelected, setIsChatSelected] = useState(true);
@@ -33,9 +39,57 @@ const Workspace = () => {
     const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
 
     const location = useLocation();
-    const socketRef = useRef(null);
     const reactNavigate = useNavigate();
     const { roomId } = useParams()
+
+    const fetchDbMessages = async () => {
+        await axios({
+            method: 'POST',
+            url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/messages`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: { roomId }
+        }).then(response => {
+            console.log('ALl messages GET -----------------------------')
+            setAllDbFetchedMessages(prevAllDbFetchedMessages => {
+                return [...response.data]
+            })
+        }).catch(err => {
+            console.log('ROOM CREATE ERROR', err.response.data);
+            toast.error(err.response.data.error);
+        });
+    }
+
+    const pushToDbMessages = async () => {
+        if (allMessages.length > 0) {
+            if (allDbFetchedMessages.length > 0) {
+                const isAlreayPushed = allMessages[allMessages.length - 1]._id ===
+                    allDbFetchedMessages[allDbFetchedMessages.length - 1]._id;
+                if (isAlreayPushed) return;
+            }
+            await axios({
+                method: 'POST',
+                url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/messages/push-messages`,
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                data: { allMessages }
+            }).then(response => {
+                console.log('ALl messages SENT -----------------------------');
+                console.log(response);
+                setAllMessages([]);
+                socketRef.current.emit(SOCKET_ACTIONS.MESSAGE, {
+                    messageObject: {},
+                    roomId,
+                    senderObject: 'null',
+                });
+            }).catch(err => {
+                console.log('ROOM CREATE ERROR', err.response.data);
+                toast.error(err.response.data.error);
+            });
+        }
+    }
 
     useEffect(() => {
         // console.log('UseEffect called ----------------------------');
@@ -50,6 +104,7 @@ const Workspace = () => {
             socketRef.current.on('connect_failed', (err) => handleErrors(err));
 
             console.log('Socket Connection Done')
+            fetchDbMessages();
             socketRef.current.emit(SOCKET_ACTIONS.JOIN, {
                 roomId,
                 username: location.state?.userDeatils.username,
@@ -86,6 +141,11 @@ const Workspace = () => {
     }, [location.state?.userDeatils, reactNavigate, roomId]);
 
     const toggleIsChatSelected = () => {
+        if (isChatSelected) {
+            pushToDbMessages();
+        } else {
+            fetchDbMessages();
+        }
         setIsChatSelected(prevIsChatSelected => !prevIsChatSelected);
     }
 
@@ -129,7 +189,8 @@ const Workspace = () => {
         }
     }
 
-    const handleLeaveRoom = () => {
+    const handleLeaveRoom = async () => {
+        await pushToDbMessages();
         reactNavigate('/');
     }
 
@@ -137,7 +198,7 @@ const Workspace = () => {
         return <Navigate to='/room' />
     }
 
-    return (<div className='##mainwrap h-screen flex p-2'>
+    return (<div className='##mainwrap h-screen flex p-2 overflow-y-hidden'>
         <div className="flex flex-col justify-between">
             <div className="h-3/5 relative">
                 <div className="##logo p-1">
@@ -161,18 +222,18 @@ const Workspace = () => {
                 >LEAVE</button>
             </div>
         </div>
-        <div className="w-full py-1 ml-3">
+        <div className="w-full h-screen p-0 my-0 ml-3 overflow-x-hidden">
             <WorksapceHeader
                 setEditorLanguage={setEditorLanguage} setEditorTheme={setEditorTheme}
                 isChatSelected={isChatSelected}
                 toggleIsChatSelected={toggleIsChatSelected}
             />
-            {isChatSelected ? (
+            <div className='h-[85%] relative'>
                 <ChatPage
-                    socketRef={socketRef}
+                    isChatSelected={isChatSelected}
                     roomId={roomId}
+                    fetchDbMessages={fetchDbMessages}
                 />
-            ) : (
                 <CodeEditor
                     socketRef={socketRef}
                     setFiles={setFiles}
@@ -180,7 +241,7 @@ const Workspace = () => {
                     handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
                     handleFileChange={handleFileChange}
                 />
-            )}
+            </div>
         </div>
         <ToastContainer position='bottom-right' />
     </div>

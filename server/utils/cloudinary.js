@@ -13,7 +13,8 @@ const uploadOnCloudinary = async (localFilePath) => {
             return { status: 'failed', error: 'localFilePath undefined' };
         }
         const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: 'auto'
+            resource_type: 'auto',
+            folder: 'CollabCode',
         });
         console.log(response);
         return { status: 'success', response };

@@ -36,7 +36,7 @@ const CodeEditor = ({
 
     return (
         <Editor className='bg pt-2'
-            width="100%" height="90%"
+            width="100%" height="100%"
             theme={editorTheme}
             language={editorLanguage}
             value={currentSelectedFile.fileContent}

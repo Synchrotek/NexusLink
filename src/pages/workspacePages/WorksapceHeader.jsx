@@ -63,7 +63,8 @@ const WorksapceHeader = ({
                 </select>
 
                 {/* ---------------------------------------------------- */}
-                <button className="btn tooltip tooltip-bottom w-14 mx-1 flex justify-center" data-tip="Go to Chats"
+                <button className="btn tooltip tooltip-bottom w-14 mx-1 flex justify-center z-40"
+                    data-tip={isChatSelected ? "Back to Code" : "See Chats"}
                     onClick={toggleIsChatSelected}
                 >
                     {isChatSelected ? (
@@ -76,7 +77,7 @@ const WorksapceHeader = ({
         </>);
 
     return (
-        <div className={`navbar bg-slate-600 flex justify-between max-h-16`}>
+        <div className={`navbar bg-slate-600 flex justify-between max-h-[15%]`}>
             {WorksapcePageHeader()}
         </div>
 

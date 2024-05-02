@@ -4,12 +4,15 @@ import { FiSend } from "react-icons/fi";
 import axios from "axios";
 import { getCookie } from '../../utils/authUtils/helper.jsx'
 import MessageComponent from './MessageComponent.jsx'
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SOCKET_ACTIONS from "../../utils/socketConn/SocketActions.js";
+import { WorkspaceContext } from "../../context/WorkspaceProvider.jsx";
 
-const ChatPage = ({ socketRef, roomId }) => {
+const ChatPage = ({ isChatSelected, roomId, fetchDbMessages }) => {
+    const {
+        socketRef, allMessages, allDbFetchedMessages, setAllMessages
+    } = useContext(WorkspaceContext);
     const currentUser = JSON.parse(localStorage.getItem('user'));
-    const [allMessages, setAllMessages] = useState([]);
     const [selectedFileData, setSelectedFileData] = useState(undefined)
     const [loader, setLoader] = useState(false);
     const [currentMessageInput, setCurrentMessageInput] = useState(
@@ -25,28 +28,42 @@ const ChatPage = ({ socketRef, roomId }) => {
                 _id: currentUser._id,
                 name: currentUser.name,
             },
-            room: roomId,
+            roomId: roomId,
             createdAt: "",
         }
     );
+
+    useEffect(() => {
+        console.log('Chat PAGE ERNDERED ooooooooooooooooooooooooooooooooooooooooo');
+    }, [])
 
     useEffect(() => {
         if (socketRef.current) {
             socketRef.current.on(SOCKET_ACTIONS.SEND_MESSAGE, ({
                 messageObject, senderObject
             }) => {
-                setAllMessages(prevAllMessages => {
-                    return [...prevAllMessages, messageObject]
-                })
+                if (messageObject.roomId) {
+                    setAllMessages(prevAllMessages => {
+                        return [...prevAllMessages, messageObject]
+                    })
+                } else {
+                    setAllMessages([]);
+                    fetchDbMessages();
+                }
             })
         } else {
             console.log('Socket code-sync error! !!!!!!!!!');
         }
+        return () => {
+            socketRef.current.off(SOCKET_ACTIONS.SEND_MESSAGE);
+        }
     }, [socketRef.current])
 
     useEffect(() => {
+        console.log('All Messages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
         console.log(allMessages);
-    }, [allMessages])
+        console.log(allDbFetchedMessages);
+    }, [allMessages, allDbFetchedMessages])
 
     const uploadFileToDb = async () => {
         let uploadedFileData = "";
@@ -106,15 +123,24 @@ const ChatPage = ({ socketRef, roomId }) => {
         });
     }
 
-    return (<>
-        <div className='bg-orange-400 w-full h-[80%] text-black'>
+    return (<div className={`absolute z-20 w-full h-[90%] transition-all
+    ${isChatSelected ? 'right-0' : '-right-[110%]'}
+    `}>
+        <div className='bg-orange-400 w-full h-[90%] text-black overflow-y-scroll'>
+            {allDbFetchedMessages.map((msg) => (
+                <MessageComponent key={`${msg.createdAt}${msg.content}`}
+                    message={msg} currentUserId={currentUser._id}
+                />
+            ))}
             {allMessages.map((msg) => (
-                <MessageComponent key={msg._id}
+                <MessageComponent key={`${msg.createdAt}${msg.content}`}
                     message={msg} currentUserId={currentUser._id}
                 />
             ))}
         </div>
-        <form className='h-[10%] flex w-full items-center px-2' encType="multipart/form-data">
+        <form className='h-[10%] flex w-full items-center px-2 my-2'
+            encType="multipart/form-data"
+        >
             <label htmlFor='fileInput' className='btn hover:bg-slate-700'>
                 <ImAttachment />
             </label>
@@ -134,7 +160,7 @@ const ChatPage = ({ socketRef, roomId }) => {
             ><FiSend />
             </button>
         </form>
-    </>
+    </div>
     )
 }
 

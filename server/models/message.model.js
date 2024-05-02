@@ -3,15 +3,19 @@ const crypto = require('crypto');
 
 // Message schema ----------------------------------------
 const messageSchema = new mongoose.Schema({
-    room: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Room',
+    roomId: {
+        type: String,
         required: true
     },
     sender: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User',
-        required: true
+        _id: {
+            type: String,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
     },
     content: {
         type: String,

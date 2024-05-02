@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // import controller
-const { uploadFileToCloudinary } = require('../controllers/message.controller.js');
+const { uploadFileToCloudinary, getAllMessages, pushMessagesIntoDB } = require('../controllers/message.controller.js');
 const { multerUpload } = require('../middlewares/multer.js');
 const { requireSignin } = require('../controllers/auth.controller.js');
 
@@ -11,5 +11,8 @@ const { requireSignin } = require('../controllers/auth.controller.js');
 router.post('/upload-file', requireSignin, multerUpload.fields([
     { name: "attachment", maxCount: "1" },
 ]), uploadFileToCloudinary);
+
+router.post('/push-messages', requireSignin, pushMessagesIntoDB)
+router.post('/', requireSignin, getAllMessages)
 
 module.exports = router;
