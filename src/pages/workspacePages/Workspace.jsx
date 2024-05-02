@@ -28,7 +28,7 @@ const Workspace = () => {
     const { currentSelectedFile, setCurrentSelectedFile, currentSelectedFileIndexRef } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
-    const [isChatSelected, setIsChatSelected] = useState(false);
+    const [isChatSelected, setIsChatSelected] = useState(true);
     const [connectedUsers, setConnectedUsers] = useState([]);
     const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
 
@@ -168,7 +168,10 @@ const Workspace = () => {
                 toggleIsChatSelected={toggleIsChatSelected}
             />
             {isChatSelected ? (
-                <ChatPage />
+                <ChatPage
+                    socketRef={socketRef}
+                    roomId={roomId}
+                />
             ) : (
                 <CodeEditor
                     socketRef={socketRef}

@@ -28,6 +28,7 @@ const socketListen = (io) => {
             })
         });
 
+        // Editor related Events -------------------------------========
         socket.on('code-change', ({ roomId, files, fileId }) => {
             socket.in(roomId).emit('code-change', { files, fileId });
         })
@@ -35,6 +36,17 @@ const socketListen = (io) => {
         socket.on('sync-code', ({ files, socketId }) => {
             io.to(socketId).emit('code-change', { files });
         })
+
+        // Editor related Events -------------------------------========
+        socket.on('message', ({ messageObject, roomId, senderObject }) => {
+            const connectedUsers = getAllConnectedClient(roomId);
+            connectedUsers.forEach(({ socketId }) => {
+                io.to(socketId).emit('send-message', {
+                    messageObject, senderObject
+                })
+            })
+        })
+
 
         // Handle disconnection of an socketId -------------------------
         socket.on('disconnecting', () => {

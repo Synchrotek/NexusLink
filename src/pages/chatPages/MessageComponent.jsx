@@ -1,10 +1,10 @@
 import RenderAttachment from './RenderAttachment';
 import { fileFormat } from './fileFearures';
 
-const MessageComponent = ({ message, user }) => {
+const MessageComponent = ({ message, currentUserId }) => {
     const { sender, content, attachments = [], createdAt } = message;
 
-    const isSameSender = sender?._id === user?._id;
+    const isSameSender = currentUserId === sender._id;
 
     return (<div className={`chat flex flex-col px-3 ${isSameSender ? 'chat-end' : 'chat-start'}`}>
         <div className="chat-header">
