@@ -23,6 +23,7 @@ app.use(cors({
 const authRoutes = require('./routes/auth.route.js');
 const userRoutes = require('./routes/user.route.js');
 const roomRoutes = require('./routes/room.route.js');
+const messageRoutes = require('./routes/message.route.js');
 
 // socket.io listener ------------------------------
 const socketListen = require('./socketComm.js')
@@ -45,6 +46,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api', setClientHeader, authRoutes);
 app.use('/api', setClientHeader, userRoutes);
 app.use('/api/rooms', setClientHeader, roomRoutes);
+app.use('/api/messages', setClientHeader, messageRoutes);
 
 const PORT = process.env.PORT || 4500;
 // app.listen(PORT, () => {
