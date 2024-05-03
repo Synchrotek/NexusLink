@@ -10,9 +10,20 @@ exports.createNewRoom = async (req, res) => {
         }
         const newRoom = new Room({
             roomId, creatorId,
-            files: {
-                filename: 'Main1', fileContent: '// Hello world', language: 'javascript'
-            }
+            files: [
+                {
+                    fileId: 1, filename: 'Main1',
+                    fileContent: '// Hello world 1', language: 'javascript'
+                },
+                {
+                    fileId: 2, filename: 'Main2',
+                    fileContent: '// Hello world 2', language: 'javascript'
+                },
+                {
+                    fileId: 3, filename: 'Main3',
+                    fileContent: '// Hello world 3', language: 'javascript'
+                },
+            ]
         });
         console.log(newRoom);
         await newRoom.save().then(result => {
@@ -70,6 +81,24 @@ exports.updateFilesInRoom = async (req, res) => {
         console.log('FINDING ROOM IN DATABASE ERROR', err);
         return res.status(400).json({
             error: 'Error FINDING room. Please try again'
+        });
+    })
+}
+
+exports.getAllFilesInRoom = async (req, res) => {
+    const { roomId } = req.body;
+    await Room.findOne({ roomId }).then(async (existingRoom) => {
+        if (!existingRoom) {
+            return res.status(400).json({
+                error: 'This room does not exists'
+            });
+        }
+        const files = existingRoom.files;
+        return res.status(200).json(files);
+    }).catch((err) => {
+        console.log('FETCHING ALL FILES IN A ROOM FROM DATABASE ERROR', err);
+        return res.status(400).json({
+            error: 'Error fetching files from room. Please try again'
         });
     })
 }

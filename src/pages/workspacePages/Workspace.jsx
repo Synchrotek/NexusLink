@@ -31,17 +31,19 @@ const Workspace = () => {
         currentSelectedFile, setCurrentSelectedFile,
         allDbFetchedMessages, setAllDbFetchedMessages,
         allMessages, setAllMessages,
+        files, setFiles,
     } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
     const [isChatSelected, setIsChatSelected] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState([]);
-    const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
+    // const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
 
     const location = useLocation();
     const reactNavigate = useNavigate();
     const { roomId } = useParams()
 
+    // =================================================================================
     const fetchDbMessages = async () => {
         await axios({
             method: 'POST',
@@ -51,25 +53,24 @@ const Workspace = () => {
             },
             data: { roomId }
         }).then(response => {
-            console.log('ALl messages GET -----------------------------')
+            // console.log('ALl messages GET -----------------------------')
             setAllDbFetchedMessages(prevAllDbFetchedMessages => {
                 return [...response.data]
             })
         }).catch(err => {
-            console.log('ROOM CREATE ERROR', err.response.data);
+            // console.log('ROOM CREATE ERROR', err.response.data);
             toast.error(err.response.data.error);
         });
     }
-
     const pushToDbMessages = async () => {
         if (allMessages.length > 0) {
             if (allDbFetchedMessages.length > 0) {
                 const isAlreayPushed = allMessages[allMessages.length - 1]._id ===
                     allDbFetchedMessages[allDbFetchedMessages.length - 1]._id;
                 if (isAlreayPushed) {
-                    console.log('ALREADY PUSHED ------------------------------');
+                    // console.log('ALREADY PUSHED ------------------------------');
                     return;
-                };
+                }
             }
             await axios({
                 method: 'POST',
@@ -79,8 +80,8 @@ const Workspace = () => {
                 },
                 data: { allMessages }
             }).then(response => {
-                console.log('ALl messages SENT -----------------------------');
-                console.log(response);
+                // console.log('ALl messages SENT -----------------------------');
+                // console.log(response);
                 setAllMessages([]);
                 socketRef.current.emit(SOCKET_ACTIONS.MESSAGE, {
                     messageObject: {},
@@ -93,9 +94,42 @@ const Workspace = () => {
             });
         }
     }
+    const getAllFilesInRoom = async () => {
+        await axios({
+            method: 'POST',
+            url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/rooms/files`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: { roomId }
+        }).then(response => {
+            // console.log('ALl FIles from room POST -----------------------------')
+            console.log('Recived Data --', response.data);
+            setFiles(response.data)
+        }).catch(err => {
+            console.log('FILE FETCH ERROR FROM ROOM', err.response.data);
+            toast.error(err.response.data.error);
+        });
+    }
+    const updateFilesInRoom = async () => {
+        await axios({
+            method: 'POST',
+            url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/rooms/files/update`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: { roomId, files }
+        }).then(response => {
+            // console.log('ALl FIles upload to db POST -----------------------------')
+            console.log(response.data);
+        }).catch(err => {
+            console.log('FILE UPATE DB ERROR FROM ROOM', err.response.data);
+            toast.error(err.response.data.error);
+        });
+    }
 
+    // =================================================================================
     useEffect(() => {
-        // console.log('UseEffect called ----------------------------');
         const handleErrors = (err) => {
             console.log('Socket error: ', err);
             toast.error('Socket connection failed, try again later');
@@ -105,9 +139,10 @@ const Workspace = () => {
             socketRef.current = await initSocket();
             socketRef.current.on('connect_error', (err) => handleErrors(err));
             socketRef.current.on('connect_failed', (err) => handleErrors(err));
+            await getAllFilesInRoom();
+            await fetchDbMessages();
 
             console.log('Socket Connection Done')
-            fetchDbMessages();
             socketRef.current.emit(SOCKET_ACTIONS.JOIN, {
                 roomId,
                 username: location.state?.userDeatils.username,
@@ -117,13 +152,14 @@ const Workspace = () => {
             socketRef.current.on(SOCKET_ACTIONS.JOINED, ({ connectedUsers, username, socketId }) => {
                 if (username !== location.state?.userDeatils.username) {
                     toast.success(`${username} joined the room`);
-                    console.log(`${username} joined the room`);
                 }
                 setConnectedUsers(connectedUsers);
-                socketRef.current.emit(SOCKET_ACTIONS.SYNC_CODE, {
-                    files,
-                    socketId
-                });
+                if (files.length > 0 && files[0].fileId !== 'demo') {
+                    socketRef.current.emit(SOCKET_ACTIONS.SYNC_CODE, {
+                        files,
+                        socketId
+                    });
+                }
             });
 
             socketRef.current.on(SOCKET_ACTIONS.DISCONNECTED, ({ socketId, username }) => {
@@ -143,13 +179,17 @@ const Workspace = () => {
         }
     }, [location.state?.userDeatils, reactNavigate, roomId]);
 
+    useEffect(() => {
+        console.log('files: -- ', files);
+    }, [files])
+
+    // =================================================================================
     const toggleIsChatSelected = () => {
         if (isChatSelected) {
             pushToDbMessages();
         }
         setIsChatSelected(prevIsChatSelected => !prevIsChatSelected);
     }
-
     const handleFileChange = (newFileContent) => {
         setFiles(prevFiles => {
             const newFiles = prevFiles.map(file => {
@@ -167,19 +207,17 @@ const Workspace = () => {
             }
             return newFiles;
         });
-        // console.log(files[0]);
-        // if (socketRef.current) {
-        // socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
-        //     roomId, files, fileId: currentSelectedFile.fileId
-        // })
-        // }
+        console.log(files[0]);
+        if (socketRef.current) {
+            socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
+                roomId, files, fileId: currentSelectedFile.fileId
+            })
+        }
     }
-
     const handleCurrentSelectedFileRefChange = (file) => {
         setCurrentSelectedFile(file);
         // console.log('file clicked: ', files.indexOf(file));
     }
-
     const handleCopyRoomId = async () => {
         try {
             await navigator.clipboard.writeText(roomId);
@@ -189,21 +227,22 @@ const Workspace = () => {
             console.error(err);
         }
     }
-
     const handleLeaveRoom = async () => {
+        await updateFilesInRoom();
         await pushToDbMessages();
         reactNavigate('/');
     }
 
+    // =================================================================================
     if (!location.state) {
         return <Navigate to='/room' />
     }
 
     return (<div className='##mainwrap h-screen flex p-2 overflow-y-hidden'>
-        <div className="flex flex-col justify-between">
-            <div className="h-3/5 relative">
-                <div className="##logo p-1">
-                    <h2 className='gifLogoAnimation h-14 text-xl text-white font-mono flex justify-center items-center'>
+        <div className="h-full flex flex-col justify-between">
+            <div className="h-[60%]">
+                <div className="p-1">
+                    <h2 className='gifLogoAnimation py-3 text-xl text-white font-mono flex justify-center items-center'>
                         Synchrotek
                     </h2>
                 </div>
@@ -211,10 +250,11 @@ const Workspace = () => {
                 <UpperSideBar
                     connectedUsers={connectedUsers}
                     files={files}
+                    setFiles={setFiles}
                     handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
                 />
             </div>
-            <div className='flex flex-col w-full gap-4 z-20'>
+            <div className='flex flex-col justify-end w-full gap-4 z-20 h-[40%] '>
                 <button className='btn btn-accent font-semibold'>TO-DO</button>
                 <button className='btn btn-accent font-semibold' onClick={handleCopyRoomId}
                 >Copy ROOM ID</button>

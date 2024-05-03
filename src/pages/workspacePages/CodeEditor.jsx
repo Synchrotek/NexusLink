@@ -10,13 +10,18 @@ const CodeEditor = ({
     handleCurrentSelectedFileRefChange, handleFileChange
 
 }) => {
-    const { currentSelectedFile, currentSelectedFileIndex } = useContext(WorkspaceContext);
+    const {
+        currentSelectedFile, currentSelectedFileIndex, setCurrentSelectedFileIndex
+    } = useContext(WorkspaceContext);
     useEffect(() => {
         if (socketRef.current) {
             socketRef.current.on(SOCKET_ACTIONS.CODE_CHANGE, ({ files, fileId }) => {
                 // console.log('-----------------------------');
                 // console.log(files.find(file => file.fileId === fileId));
+
                 setFiles(files);
+
+
                 // if (currentSelectedFile.fileId === fileId) {
                 //     setCurrentSelectedFile(files.find(file => file.fileId === fileId));
                 // }

@@ -1,15 +1,40 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react'
+import { CiSquarePlus } from "react-icons/ci";
+import { useContext, useState } from 'react'
 import ConnectedUsersBar from './ConnectedUsersBar'
 import FileListBar from './FileListBar'
 import { BiAdjust } from "react-icons/bi";
+import { WorkspaceContext } from "../../context/WorkspaceProvider";
 
 const UpperSideBar = ({
-    connectedUsers, files,
+    connectedUsers, files, setFiles,
     handleCurrentSelectedFileRefChange
 }) => {
+    const { setCurrentSelectedFileIndex } = useContext(WorkspaceContext);
+    const [isFilesTabOpen, setIsFilesTabOpen] = useState(true);
+    const [isFileCreating, setIsFileCreating] = useState(false);
+    const [newFileName, setNewFileName] = useState('');
 
-    const [isFilesTabOpen, setIsFilesTabOpen] = useState(false);
+    const handleNewFileSubmit = (e) => {
+        console.log('handleNewFileSubmit clicked')
+        e.preventDefault();
+        setFiles(prevFiles => {
+            return [
+                ...prevFiles,
+                {
+                    fileId: files.length + 1, filename: newFileName,
+                    fileContent: `// Hello from ${newFileName}`, language: 'javascript',
+                }
+            ]
+        });
+        setNewFileName('');
+        setIsFileCreating(false);
+    }
+    const handleDeleteFile = (e, fileId) => {
+        setFiles(prevFiles => {
+            return prevFiles.filter(file => file.fileId !== fileId)
+        });
+    }
 
     const ConnectedUserList = () => (
         connectedUsers.map(connectedUser => (
@@ -20,17 +45,34 @@ const UpperSideBar = ({
     )
 
     const FileList = () => (
-        files.map(file => (
-            <FileListBar key={file.fileId}
-                file={file}
-                handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
-            />
+        <div className="">
+            {isFileCreating ? (
+                <form onSubmit={handleNewFileSubmit}>
+                    <input type="text"
+                        className='max-w-[95%] bg-orange-400 rounded ml-2 p-1 text-black focus-within:outline-none'
+                        value={newFileName}
+                        onChange={e => setNewFileName(e.target.value)}
+                    />
+                </form>
+            ) : (
+                <div className="flex justify-between px-5">
+                    <p className="text-sm">All Files Listed</p>
+                    <CiSquarePlus className="cursor-pointer"
+                        onClick={() => setIsFileCreating(true)}
+                    />
+                </div>)}
+            {files.map(file => (
+                <FileListBar key={file.fileId}
+                    file={file}
+                    handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
+                    handleDeleteFile={handleDeleteFile}
+                />
 
-        ))
-    )
+            ))}
+        </div>)
 
     return (
-        <div className="overflow-x-hidden overflow-y-scroll hideScrollBar w-[200px] h-full flex flex-col mt-10"
+        <div className="overflow-x-hidden overflow-y-scroll hideScrollBar w-[200px] h-[70%] flex flex-col mt-10"
         >
             <div role="tablist" className="absolute top-16 tabs tabs-bordered">
                 <button
@@ -42,7 +84,7 @@ const UpperSideBar = ({
                     role="tab" className={`tab ${isFilesTabOpen ? 'tab-active' : ''}`}>Files
                 </button>
             </div>
-            <div className=''>
+            <div className='h-[90%]'>
                 {isFilesTabOpen ? (<>
                     {FileList()}
                 </>) : (<>

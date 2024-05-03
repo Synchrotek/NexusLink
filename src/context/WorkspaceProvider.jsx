@@ -6,12 +6,16 @@ export const WorkspaceContext = createContext(null);
 const WorkspaceProvider = ({ children }) => {
     const token = getCookie('token');
     const socketRef = useRef(null);
-    const [currentSelectedFile, setCurrentSelectedFile] = useState(
-        { fileId: 1, filename: 'Main1.py', fileContent: '1' }
-    );
     const [allMessages, setAllMessages] = useState([]);
     const [allDbFetchedMessages, setAllDbFetchedMessages] = useState([]);
     const [currentSelectedFileIndex, setCurrentSelectedFileIndex] = useState(0);
+    const [files, setFiles] = useState([
+        {
+            fileId: 'demo', filename: 'demo',
+            fileContent: '// Hello world', language: 'javascript'
+        }
+    ]);
+    const [currentSelectedFile, setCurrentSelectedFile] = useState(files[0]);
 
     return (
         <WorkspaceContext.Provider value={{
@@ -19,7 +23,8 @@ const WorkspaceProvider = ({ children }) => {
             currentSelectedFile, setCurrentSelectedFile,
             allMessages, setAllMessages,
             allDbFetchedMessages, setAllDbFetchedMessages,
-            currentSelectedFileIndex, setCurrentSelectedFileIndex
+            currentSelectedFileIndex, setCurrentSelectedFileIndex,
+            files, setFiles
         }}>
             {children}
         </WorkspaceContext.Provider>

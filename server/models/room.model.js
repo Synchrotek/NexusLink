@@ -29,6 +29,10 @@ const roomSchema = new mongoose.Schema({
     },
     files: [
         {
+            fileId: {
+                type: Number,
+                required: true,
+            },
             filename: {
                 type: String,
                 required: true,
