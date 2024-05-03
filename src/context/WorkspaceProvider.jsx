@@ -17,6 +17,7 @@ const WorkspaceProvider = ({ children }) => {
     ]);
     const [currentSelectedFile, setCurrentSelectedFile] = useState(files[0]);
     const [selectedUserProfile, setSelectedUserProfile] = useState();
+    const [isTodoApOpen, setIsTodoApOpen] = useState(true);
 
     return (
         <WorkspaceContext.Provider value={{
@@ -27,6 +28,7 @@ const WorkspaceProvider = ({ children }) => {
             currentSelectedFileIndexRef,
             files, setFiles,
             selectedUserProfile, setSelectedUserProfile,
+            isTodoApOpen, setIsTodoApOpen,
         }}>
             {children}
         </WorkspaceContext.Provider>

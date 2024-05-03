@@ -6,10 +6,12 @@ import UpperSideBar from './UpperSideBar.jsx';
 import { useLocation, useNavigate, Navigate, useParams } from 'react-router-dom';
 import { initSocket } from '../../utils/socketConn/socket';
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions.js';
-import { ToastContainer, toast } from 'react-toastify';
+// import { ToastContainer, toast } from 'react-toastify';
+import { Toaster, toast } from 'react-hot-toast';
 import { WorkspaceContext } from '../../context/WorkspaceProvider.jsx';
 import ChatPage from '../chatPages/ChatPage.jsx';
 import axios from 'axios';
+import TodoPage from '../todoPages/TodoPage.jsx';
 
 // delete here
 const EXAMPLE_FILE_LIST = [
@@ -33,6 +35,7 @@ const Workspace = () => {
         allMessages, setAllMessages,
         currentSelectedFileIndexRef,
         files, setFiles,
+        setIsTodoApOpen,
     } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
@@ -165,7 +168,9 @@ const Workspace = () => {
             });
 
             socketRef.current.on(SOCKET_ACTIONS.DISCONNECTED, ({ socketId, username }) => {
-                toast.success(`${username} left the room.`);
+                toast(`${username} left the room.`, {
+                    icon: 'ℹ️'
+                });
                 setConnectedUsers((prev) => {
                     return prev.filter(connectedUser => connectedUser.socketId !== socketId)
                 })
@@ -239,7 +244,7 @@ const Workspace = () => {
         return <Navigate to='/room' />
     }
 
-    return (<div className='##mainwrap h-screen flex p-2 overflow-y-hidden'>
+    return (<div className='##mainwrap h-screen flex p-2 overflow-y-hidden relative'>
         <div className="h-full flex flex-col justify-between">
             <div className="h-[60%]">
                 <div className="p-1">
@@ -255,9 +260,13 @@ const Workspace = () => {
                     handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
                 />
             </div>
+            <TodoPage />
             <div className='flex flex-col justify-end w-full gap-4 z-20 h-[40%] '>
-                <button className='btn btn-accent font-semibold'>TO-DO</button>
-                <button className='btn btn-accent font-semibold' onClick={handleCopyRoomId}
+                <button className='btn btn-accent font-semibold'
+                    onClick={() => setIsTodoApOpen(true)}
+                >TO-DO</button>
+                <button className='btn btn-accent font-semibold'
+                    onClick={handleCopyRoomId}
                 >Copy ROOM ID</button>
                 <button className='btn btn-outline btn-warning font-semibold'
                     onClick={handleLeaveRoom}
@@ -285,7 +294,10 @@ const Workspace = () => {
                 />
             </div>
         </div>
-        <ToastContainer position='bottom-right' />
+        <Toaster
+            position="top-left"
+            reverseOrder={false}
+        />
     </div>
     )
 }

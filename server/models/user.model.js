@@ -34,6 +34,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'subscriber'
     },
+    todos: [
+        {
+            data: {
+                type: String,
+            },
+            done: {
+                type: String,
+                default: false
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now()
+            }
+        }
+    ],
     resetPasswordToken: {
         data: {
             type: String,
