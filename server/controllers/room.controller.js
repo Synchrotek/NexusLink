@@ -15,14 +15,6 @@ exports.createNewRoom = async (req, res) => {
                     fileId: 1, filename: 'Main1',
                     fileContent: '// Hello world 1', language: 'javascript'
                 },
-                {
-                    fileId: 2, filename: 'Main2',
-                    fileContent: '// Hello world 2', language: 'javascript'
-                },
-                {
-                    fileId: 3, filename: 'Main3',
-                    fileContent: '// Hello world 3', language: 'javascript'
-                },
             ]
         });
         console.log(newRoom);

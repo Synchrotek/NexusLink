@@ -66,7 +66,7 @@ const RoomSelect = () => {
             if (!values.roomName) {
                 return toast.error('Room name and description is required');
             }
-            handleCreateRoom();
+            await handleCreateRoom();
         }
 
         navigate(`/room/${values.roomId}`, {

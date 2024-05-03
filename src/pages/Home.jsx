@@ -54,6 +54,7 @@ const Home = () => {
             data: dataToSend
         }).then(response => {
             console.log(response.data);
+            getAllRooms();
         }).catch(err => {
             console.log('ROOM CREATE ERROR', err.response.data);
             toast.error(err.response.data.error);
