@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Layout from './Layout.jsx'
 import { getCookie } from '../utils/authUtils/helper.jsx';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -62,6 +62,7 @@ const Home = () => {
 
     return (
         <Layout>
+            <Toaster />
             <div className="col-d-6 offset-md-1 text-center">
                 <h1 className='p-5'>
                     All existing rooms
@@ -70,13 +71,12 @@ const Home = () => {
                 <div className='flex flex-wrap'>
                     {allRooms.length > 0 && allRooms.map(eachRoom => (
                         <div className="card w-1/2 bg-base-100 shadow-xl" key={eachRoom._id}>
-                            <figure className="px-10 pt-10">
-                                <img src="" alt="RooomImage" className="rounded-xl" />
-                            </figure>
-                            <div className="card-body items-center text-center">
-                                <h2 className="card-title">{eachRoom.roomId}</h2>
-                                <p>Creator: {eachRoom.creatorId}</p>
-                                <p>Created on: {eachRoom.createdAt}</p>
+                            <div className="card-body items-center text-center text-sm">
+                                <h2 className="card-title">- {eachRoom.name} -</h2>
+                                <p className='text-xs'>Id: {eachRoom.roomId}</p>
+                                <p>( {eachRoom.description} )</p>
+                                <p>Creator: {eachRoom.creator.creatorEmail}</p>
+                                <p>Created on: {eachRoom.createdAt.substring(0, 10)}</p>
                                 <div className="card-actions">
                                     <button className="btn btn-primary"
                                         onClick={() => handleJoinRoom(eachRoom.roomId)}

@@ -1,7 +1,7 @@
 const Room = require('../models/room.model.js');
 
 exports.createNewRoom = async (req, res) => {
-    const { roomId, creatorId } = req.body;
+    const { roomId, creator, name, description } = req.body;
     await Room.findOne({ roomId }).then(async (existingRoom) => {
         if (existingRoom) {
             return res.status(200).json({
@@ -9,7 +9,7 @@ exports.createNewRoom = async (req, res) => {
             });
         }
         const newRoom = new Room({
-            roomId, creatorId,
+            roomId, creator: creator, name, description,
             files: [
                 {
                     fileId: 1, filename: 'Main1',
@@ -111,9 +111,9 @@ exports.deleteARoom = async (req, res) => {
                 error: 'Room (requested for deletion) does not exist'
             });
         }
-        if (givenCreatorId.toString() !== existingRoom.creatorId.toString()) {
+        if (givenCreatorId.toString() !== existingRoom.creator.creatorId.toString()) {
             return res.status(400).json({
-                error: 'Only the one whi createdcan delete the room'
+                error: 'Only the one who created can delete the room'
             });
         }
         await Room.deleteOne({ roomId }).then(result => {
