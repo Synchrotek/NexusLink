@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 import { ImAttachment } from "react-icons/im";
 import { FiSend } from "react-icons/fi";
-import axios from "axios";
-import { getCookie } from '../../utils/authUtils/helper.jsx'
+import { uploadFileToDb } from '../../utils/apiCalls/file.apicalls.js'
 import MessageComponent from './MessageComponent.jsx'
 import { useContext, useEffect, useState } from "react";
 import SOCKET_ACTIONS from "../../utils/socketConn/SocketActions.js";
@@ -65,36 +64,12 @@ const ChatPage = ({ isChatSelected, roomId, fetchDbMessages }) => {
         console.log(allDbFetchedMessages);
     }, [allMessages, allDbFetchedMessages])
 
-    const uploadFileToDb = async () => {
-        let uploadedFileData = "";
-        setLoader(true);
-        const token = getCookie('token');
-        const formData = new FormData();
-        formData.append('attachment', selectedFileData);
-        await axios({
-            method: 'POST',
-            url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/messages/upload-file`,
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            data: formData
-        }).then(response => {
-            uploadedFileData = response.data.response;
-            console.log(uploadedFileData);
-        }).catch(err => {
-            console.log('UPLOAD ATTACHMENT ERROR', err.response.data);
-        });
-        setSelectedFileData(undefined);
-        setLoader(false);
-        return uploadedFileData;
-    }
-
     const sendMessage = async (e) => {
         console.log('btn clicked ---------------------');
         e.preventDefault();
         let uploaeAttachments;
         if (selectedFileData) {
-            const uploadedFileData = await uploadFileToDb();
+            const uploadedFileData = await uploadFileToDb(setLoader, selectedFileData, setSelectedFileData);
             uploaeAttachments = [{
                 public_id: uploadedFileData.original_filename,
                 url: uploadedFileData.url

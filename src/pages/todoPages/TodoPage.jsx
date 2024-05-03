@@ -86,13 +86,13 @@ const TodoPage = () => {
         console.log('Deadline', deadline);
 
         if (isEmpty) {
-            alert("Todo's input is Empty");
+            toast.error("Todo's input is Empty");
             return;
         }
         // const isDuplicate = todos && todos.some((todo) => todo.value.toUpperCase() === newTodo.toUpperCase());
 
         // if (isDuplicate) {
-        //     alert("This todo is Already present");
+        //     toast.error("This todo is Already present");
         //     return;
         // }
 

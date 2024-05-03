@@ -8,7 +8,7 @@ const { requireSignin } = require('../controllers/auth.controller.js');
 
 // import validators
 
-router.post('/upload-file', requireSignin, multerUpload.fields([
+router.post('/upload-file', multerUpload.fields([
     { name: "attachment", maxCount: "1" },
 ]), uploadFileToCloudinary);
 

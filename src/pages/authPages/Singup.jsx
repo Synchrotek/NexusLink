@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { isAuth } from '../../utils/authUtils/helper';
+import { uploadFileToDb } from '../../utils/apiCalls/file.apicalls';
 import Layout from '../Layout'
+import Avatar from 'react-avatar';
 
 const Singup = () => {
     const [values, setValues] = useState({
@@ -13,7 +15,6 @@ const Singup = () => {
         email: '',
         password: '',
         confirmPassword: '',
-        profilePic: '',
         bio: '',
         loading: false
     });
@@ -25,6 +26,7 @@ const Singup = () => {
         });
     }
     const [isInputfieldPage2, setIsInputfieldPage2] = useState(false);
+    const [profilePic, setProfilePic] = useState();
 
     const handleInputErrors = ({ name, email, password, confirmPassword }) => {
         if (!name || !email || !password || !confirmPassword) {
@@ -54,7 +56,18 @@ const Singup = () => {
     const clickSubmit = async (e) => {
         e.preventDefault();
         setValues({ ...values, loading: true })
-        const dataToSend = { name: values.name, email: values.email, password: values.password, profilePic: values.profilePic, bio: values.bio }
+        let uploadedProfilePic;
+        if (profilePic) {
+            uploadedProfilePic = await uploadFileToDb(null, profilePic, setProfilePic);
+            console.log('profilePic URL', uploadedProfilePic);
+        }
+        const dataToSend = {
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            profilePic: uploadedProfilePic ? uploadedProfilePic.url : '',
+            bio: values.bio
+        }
         console.log(dataToSend);
         if (handleInputErrors(values)) {
             await axios({
@@ -78,6 +91,31 @@ const Singup = () => {
     }
 
     const signupForm1 = () => (<form>
+        <div className='text-center'>
+            <label
+                htmlFor="profilepicInput"
+                className='rounded-full z-10 bg-black tooltip tooltip-info tooltip-bottom cursor-pointer relative'
+                data-tip="Change Picture"
+            >
+                <input type="file" name="" id="profilepicInput"
+                    onChange={e => setProfilePic(e.target.files[0])}
+                    className="hidden"
+                />
+                {profilePic ? (
+                    <Avatar
+                        className='hover:opacity-90 object-cover transition-opacity'
+                        size={100} round="200px"
+                        src={URL.createObjectURL(profilePic)}
+                    />
+                ) : (
+                    <Avatar
+                        className='hover:opacity-90 object-cover transition-opacity'
+                        size={100} round="200px"
+                        src={'https://i.pinimg.com/originals/19/76/f9/1976f9954bf0b470d1b4ba6aedc9cb41.jpg'}
+                    />
+                )}
+            </label>
+        </div>
         <div>
             <label className='label p-2'>
                 <span className='text-base label-text'>
@@ -89,19 +127,6 @@ const Singup = () => {
                 type="text" placeholder='Enter your name'
                 value={values.name}
                 onChange={(e => handleChange(e, 'name'))}
-            />
-        </div>
-        <div>
-            <label className='label p-2'>
-                <span className='text-base label-text'>
-                    Profilepic :
-                </span>
-            </label>
-            <input
-                className='w-full input input-bordered h-10 focus:outline-none'
-                type='text' placeholder='Enter url to your profile picture'
-                value={values.profilePic}
-                onChange={(e => handleChange(e, 'profilePic'))}
             />
         </div>
         <div>
@@ -214,7 +239,7 @@ const Singup = () => {
             <ToastContainer />
             <div className="rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0 w-3/4 sm:w-1/2 md:w-1/2 lg:w-1/2 px-6 py-106">
                 {isAuth() ? <Navigate to='/' /> : null}
-                <h1 className='text-3xl font-semibold text-center text-gray-300 my-2'>
+                <h1 className='text-3xl font-semibold text-center text-gray-300 mt-2 mb-4'>
                     <span className='text-blue-300'>{"Let's"}</span>
                     &nbsp;Sign Up
                 </h1>

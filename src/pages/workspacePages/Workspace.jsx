@@ -28,7 +28,6 @@ const Workspace = () => {
     const [editorTheme, setEditorTheme] = useState('vs-dark');
     const [isChatSelected, setIsChatSelected] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState([]);
-    // const [files, setFiles] = useState(EXAMPLE_FILE_LIST);
 
     const location = useLocation();
     const reactNavigate = useNavigate();
