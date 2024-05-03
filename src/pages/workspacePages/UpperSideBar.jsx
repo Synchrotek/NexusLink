@@ -8,7 +8,8 @@ import { WorkspaceContext } from "../../context/WorkspaceProvider";
 
 const UpperSideBar = ({
     connectedUsers, files, setFiles,
-    handleCurrentSelectedFileRefChange
+    handleCurrentSelectedFileRefChange,
+    selectedUserProfile
 }) => {
     const { currentSelectedFileIndexRef } = useContext(WorkspaceContext);
     const [isFilesTabOpen, setIsFilesTabOpen] = useState(true);
@@ -40,13 +41,25 @@ const UpperSideBar = ({
         console.log('connectedUsers: ', connectedUsers);
     }, [connectedUsers])
 
-    const ConnectedUserList = () => (
-        connectedUsers.map(connectedUser => (
-            <ConnectedUsersBar key={`users-${connectedUser.socketId}`}
-                username={connectedUser.username}
-            />
-        ))
-    )
+    useEffect(() => {
+        console.log('selectedUserProfile: ', selectedUserProfile);
+    }, [selectedUserProfile])
+
+    // username, name, email, profilePic, bio
+
+    const ConnectedUserList = () => {
+        return (<>
+            {selectedUserProfile && (
+                <div>{selectedUserProfile.profilePic}</div>
+            )}
+            {connectedUsers.map(connectedUser => (
+                <ConnectedUsersBar key={`users-${connectedUser.socketId}`}
+                    userDeatils={connectedUser.userDeatils}
+                    username={connectedUser.username}
+                />
+            ))}
+        </>)
+    }
 
     const FileList = () => (
         <div className="">

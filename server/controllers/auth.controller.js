@@ -151,11 +151,11 @@ exports.signin = (req, res) => {
             { expiresIn: '7d' },
 
         );
-        const { _id, name, email, role } = user;
+        const { _id, name, email, role, profilePic, bio } = user;
 
         return res.json({
             token,
-            user: { _id, name, email, role }
+            user: { _id, name, email, role, profilePic, bio }
         })
     })
 }

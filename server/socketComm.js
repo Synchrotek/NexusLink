@@ -4,11 +4,12 @@ const socketListen = (io) => {
 
     const userSocketMap = {};
 
-    const getAllConnectedClient = (roomId) => {
+    const getAllConnectedClient = (roomId, userDeatils) => {
         return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map((socketId) => {
             return {
                 socketId,
                 username: userSocketMap[socketId],
+                userDeatils,
             }
         });
     }
@@ -18,13 +19,11 @@ const socketListen = (io) => {
         // Listen for events from clients -------------------
         socket.on('join', async ({ roomId, userDeatils }) => {
             // console.log(`${username} Joined - ${socket.id}`);
-            console.log(userDeatils);
             userSocketMap[socket.id] = userDeatils.username;
             socket.join(roomId);
-            const connectedUsers = getAllConnectedClient(roomId);
+            const connectedUsers = getAllConnectedClient(roomId, userDeatils);
             connectedUsers.forEach(({ socketId }) => {
                 io.to(socketId).emit('joined', {
-                    userDeatils: userDeatils,
                     connectedUsers,
                     username: userDeatils.username,
                     socketId: socket.id

@@ -16,7 +16,6 @@ const RoutePages = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<Home />} />
                 <Route path='/signup' element={<Singup />} />
                 <Route path='/signin' element={<Singin />} />
                 <Route path='/auth/activate/:token' element={<AccountActivate />} />
@@ -25,6 +24,7 @@ const RoutePages = () => {
 
                 {/* Private Routes ------------------------------- */}
                 <Route element={<PrivateRoutes />}>
+                    <Route path='/' element={<Home />} />
                     <Route path='/room' element={<RoomSelect />} />
                     <Route path='/room/:roomId' element={
                         <WorkspaceProvider>

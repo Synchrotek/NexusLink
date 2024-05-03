@@ -16,6 +16,7 @@ const WorkspaceProvider = ({ children }) => {
         }
     ]);
     const [currentSelectedFile, setCurrentSelectedFile] = useState(files[0]);
+    const [selectedUserProfile, setSelectedUserProfile] = useState();
 
     return (
         <WorkspaceContext.Provider value={{
@@ -24,7 +25,8 @@ const WorkspaceProvider = ({ children }) => {
             allMessages, setAllMessages,
             allDbFetchedMessages, setAllDbFetchedMessages,
             currentSelectedFileIndexRef,
-            files, setFiles
+            files, setFiles,
+            selectedUserProfile, setSelectedUserProfile,
         }}>
             {children}
         </WorkspaceContext.Provider>

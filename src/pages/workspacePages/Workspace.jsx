@@ -145,15 +145,13 @@ const Workspace = () => {
 
             console.log('Socket Connection Done')
             const userDeatils = location.state?.userDeatils;
-            console.log('jjjjjjjjjjjj-', userDeatils);
             socketRef.current.emit(SOCKET_ACTIONS.JOIN, {
                 roomId,
                 userDeatils,
             });
 
             //  Listeinging for joined event
-            socketRef.current.on(SOCKET_ACTIONS.JOINED, ({ userDeatils, connectedUsers, username, socketId }) => {
-                console.log('userDeatils: ---', userDeatils);
+            socketRef.current.on(SOCKET_ACTIONS.JOINED, ({ connectedUsers, username, socketId }) => {
                 if (username !== location.state?.userDeatils.username) {
                     toast.success(`${username} joined the room`);
                 }
