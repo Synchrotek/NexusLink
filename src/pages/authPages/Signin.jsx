@@ -45,7 +45,7 @@ const Signin = () => {
                         { ...values, name: '', email: '', password: '', loading: false }
                     );
                     toast.success(`Hey ${response.data.user.name}, Welcome back!`);
-                    isAuth() && (navigate('/room'))
+                    isAuth() && (navigate('/'))
                 });
             }).catch(err => {
                 console.log('SIGNUP ERROR', err.response.data);

@@ -10,10 +10,9 @@ const Layout = ({ children, navFixed, className }) => {
     }
 
     return (
-        <div>
-
+        <div className='h-screen'>
             {/* NavBar --------------------------------------------- */}
-            <div className={`navbar bg-slate-600 flex justify-between px-4
+            <div className={`navbar bg-slate-600 h-[10%] flex justify-between px-4
                 ${navFixed ? 'fixed' : ''}`}>
                 <Link to='/' className='text-white'>
                     CollabCode
@@ -23,7 +22,7 @@ const Layout = ({ children, navFixed, className }) => {
                         <Link to='/room'
                             className={`btn btn-info border-none
                             ${isActive('/room') ? '' : 'btn-outline'}`}
-                        ><p className='text-white'>Room Select</p>
+                        ><p className='text-white'>Join Room</p>
                         </Link>
                         <Link to='/user'
                             className={`btn btn-info border-none
@@ -33,6 +32,7 @@ const Layout = ({ children, navFixed, className }) => {
                         <Link className="btn btn-outline btn-error"
                             onClick={() => {
                                 signout(() => {
+                                    navigate(0)
                                     navigate('/signin')
                                 });
                             }}><p className='text-white'>LogOut</p>
@@ -56,7 +56,7 @@ const Layout = ({ children, navFixed, className }) => {
             <div className={className} >
                 {children}
             </div>
-        </div >
+        </div>
     )
 }
 

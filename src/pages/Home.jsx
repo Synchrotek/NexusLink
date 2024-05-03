@@ -62,13 +62,13 @@ const Home = () => {
     }
 
     return (
-        <Layout>
+        <Layout className=''>
             <Toaster />
             <div className="col-d-6 offset-md-1 text-center">
-                <h1 className='p-5'>
+                <h1 className='p-5 pb-3 border-b-[1px] mx-[8%] text-xl'>
                     All existing rooms
                 </h1>
-                <hr />
+                {/* <hr /> */}
                 <div className='flex flex-wrap'>
                     {allRooms.length > 0 && allRooms.map(eachRoom => (
                         <div className="card w-1/2 bg-base-100 shadow-xl" key={eachRoom._id}>
