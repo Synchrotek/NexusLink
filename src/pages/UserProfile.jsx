@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 import Layout from './Layout'
 import { isAuth, getCookie, signout, updateUser } from '../utils/authUtils/helper'
+import Avatar from 'react-avatar';
+import { uploadFileToDb } from '../utils/apiCalls/file.apicalls';
 
 const UserProfile = () => {
     const navigate = useNavigate();
@@ -18,6 +20,7 @@ const UserProfile = () => {
         bio: '',
     });
     const [passwordShow, setPasswordShow] = useState(false);
+    const [currProfilePic, setCurrProfilePic] = useState();
 
     useEffect(() => {
         loadProfile();
@@ -63,10 +66,15 @@ const UserProfile = () => {
             return toast.error('Password is required for updation!');
         }
         setValues({ ...values, loading: true })
+        let uploadedProfilePic;
+        if (currProfilePic) {
+            uploadedProfilePic = await uploadFileToDb(null, currProfilePic, setCurrProfilePic);
+            console.log('updatedProfilePic URL', uploadedProfilePic);
+        }
         const dataToSend = {
             name: values.name,
             bio: values.bio,
-            profilePic: values.profilePic,
+            profilePic: uploadedProfilePic ? uploadedProfilePic.url : values.profilePic,
             password: values.password
         }
         await axios({
@@ -84,6 +92,7 @@ const UserProfile = () => {
                     { ...values, password: '', loading: false }
                 );
                 toast.success('Profile updated Successfully');
+                loadProfile();
                 setUpdateMode(false);
             })
         }).catch(err => {
@@ -94,6 +103,34 @@ const UserProfile = () => {
     }
 
     const updateUserForm = () => (<form>
+        <div className='text-center mt-3'>
+            <label
+                htmlFor="profilepicInput"
+                className={`rounded-full z-10 bg-black relative
+                tooltip tooltip-info tooltip-bottom
+                ${!updateMode ? 'cursor-not-allowed' : 'cursor-pointer'} `}
+                data-tip="Change Picture"
+            >
+                <input type="file" name="" id="profilepicInput"
+                    onChange={e => setCurrProfilePic(e.target.files[0])}
+                    className="hidden disabled:cursor-not-allowed"
+                    disabled={!updateMode}
+                />
+                {currProfilePic ? (
+                    <Avatar
+                        className='hover:opacity-90 object-cover transition-opacity'
+                        size={80} round="200px"
+                        src={URL.createObjectURL(currProfilePic)}
+                    />
+                ) : (
+                    <Avatar
+                        className='hover:opacity-90 object-cover transition-opacity'
+                        size={80} round="200px"
+                        src={values.profilePic}
+                    />
+                )}
+            </label>
+        </div>
         <div>
             <label className='label p-2'>
                 <span className='text-base label-text'>
@@ -108,7 +145,7 @@ const UserProfile = () => {
                 onChange={(e => handleChange(e, 'name'))}
             />
         </div>
-        <div>
+        {/* <div>
             <label className='label p-2'>
                 <span className='text-base label-text'>
                     Profilepic :
@@ -121,7 +158,7 @@ const UserProfile = () => {
                 disabled={!updateMode}
                 onChange={(e => handleChange(e, 'profilePic'))}
             />
-        </div>
+        </div> */}
         <div>
             <label className='label p-2'>
                 <span className='text-base label-text'>

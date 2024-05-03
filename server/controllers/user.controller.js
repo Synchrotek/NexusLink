@@ -20,6 +20,9 @@ exports.readUser = (req, res) => {
 
 exports.updateUser = (req, res) => {
     const { name, bio, profilePic, password } = req.body;
+    console.log('---------------------------------------------------');
+    console.log('profilePic: ', profilePic);
+    console.log('---------------------------------------------------');
     User.findById(req.auth._id).then((user) => {
         if (!user) {
             console.log('User not found');

@@ -1,10 +1,8 @@
 import axios from "axios";
-import { getCookie } from "../authUtils/helper";
 
 export const uploadFileToDb = async (setLoader, selectedFileData, setSelectedFileData) => {
     let uploadedFileData = "";
     setLoader && setLoader(true);
-    const token = getCookie('token');
     const formData = new FormData();
     formData.append('attachment', selectedFileData);
     await axios({
