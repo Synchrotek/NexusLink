@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { CiSquarePlus } from "react-icons/ci";
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import ConnectedUsersBar from './ConnectedUsersBar'
 import FileListBar from './FileListBar'
 import { BiAdjust } from "react-icons/bi";
@@ -35,6 +35,10 @@ const UpperSideBar = ({
             return prevFiles.filter(file => file.fileId !== fileId)
         });
     }
+
+    useEffect(() => {
+        console.log('connectedUsers: ', connectedUsers);
+    }, [connectedUsers])
 
     const ConnectedUserList = () => (
         connectedUsers.map(connectedUser => (

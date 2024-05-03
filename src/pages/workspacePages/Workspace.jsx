@@ -144,13 +144,16 @@ const Workspace = () => {
             await fetchDbMessages();
 
             console.log('Socket Connection Done')
+            const userDeatils = location.state?.userDeatils;
+            console.log('jjjjjjjjjjjj-', userDeatils);
             socketRef.current.emit(SOCKET_ACTIONS.JOIN, {
                 roomId,
-                username: location.state?.userDeatils.username,
+                userDeatils,
             });
 
             //  Listeinging for joined event
-            socketRef.current.on(SOCKET_ACTIONS.JOINED, ({ connectedUsers, username, socketId }) => {
+            socketRef.current.on(SOCKET_ACTIONS.JOINED, ({ userDeatils, connectedUsers, username, socketId }) => {
+                console.log('userDeatils: ---', userDeatils);
                 if (username !== location.state?.userDeatils.username) {
                     toast.success(`${username} joined the room`);
                 }
