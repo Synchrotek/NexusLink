@@ -54,3 +54,52 @@ exports.updateUser = (req, res) => {
         })
     });
 }
+
+exports.getAllTodos = async (req, res) => {
+    const { userId } = req.body;
+    await User.findOne({ _id: userId }).then(async (user) => {
+        console.log('user found', user);
+        if (!user) {
+            return res.status(400).json({
+                error: 'This user does not exists'
+            });
+        }
+        const todos = user.todos || [];
+        return res.status(200).json(todos);
+    }).catch((err) => {
+        console.log('FINDING USER IN DATABASE ERROR', err);
+        return res.status(400).json({
+            error: 'Error FINDING user. Please try again'
+        });
+    })
+}
+
+exports.updateAllTodos = async (req, res) => {
+    const { userId, todos } = req.body;
+    await User.findOne({ _id: userId }).then(async (user) => {
+        console.log('user found', user);
+        if (!user) {
+            return res.status(400).json({
+                error: 'This user does not exists'
+            });
+        }
+        await User.findByIdAndUpdate(
+            { _id: user._id },
+            { todos }
+        ).then(result => {
+            res.status(200).json({
+                message: 'TodoList updated successfully'
+            })
+        }).catch(err => {
+            console.log('UPDATING TODOS TO DB ERROR', err)
+            return res.status(500).json({
+                error: 'UPDATING TODOS TO DB ERROR'
+            });
+        })
+    }).catch((err) => {
+        console.log('FINDING USER IN DATABASE ERROR', err);
+        return res.status(400).json({
+            error: 'Error FINDING user. Please try again'
+        });
+    })
+}

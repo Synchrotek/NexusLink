@@ -12,20 +12,7 @@ import { WorkspaceContext } from '../../context/WorkspaceProvider.jsx';
 import ChatPage from '../chatPages/ChatPage.jsx';
 import axios from 'axios';
 import TodoPage from '../todoPages/TodoPage.jsx';
-
-// delete here
-const EXAMPLE_FILE_LIST = [
-    { fileId: 1, filename: 'Main1.py', fileContent: '1' },
-    { fileId: 2, filename: 'Main2.py', fileContent: '2' },
-    { fileId: 3, filename: 'Main3.py', fileContent: '3' },
-    { fileId: 4, filename: 'Main4.py', fileContent: '4' },
-    { fileId: 5, filename: 'Main5.py', fileContent: '5' },
-    { fileId: 6, filename: 'Main6.py', fileContent: '6' },
-    { fileId: 7, filename: 'Main7.py', fileContent: '7' },
-    { fileId: 8, filename: 'Main8.py', fileContent: '8' },
-    { fileId: 9, filename: 'Main9.py', fileContent: '9' },
-    { fileId: 10, filename: 'Main10.py', fileContent: '10' },
-]
+import { getAllTodosFromDB, updateAllTodos } from '../../utils/apiCalls/user.apicalls.js';
 
 const Workspace = () => {
     const {
@@ -33,9 +20,9 @@ const Workspace = () => {
         currentSelectedFile, setCurrentSelectedFile,
         allDbFetchedMessages, setAllDbFetchedMessages,
         allMessages, setAllMessages,
-        currentSelectedFileIndexRef,
         files, setFiles,
         setIsTodoApOpen,
+        todos, setTodos
     } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
@@ -58,9 +45,7 @@ const Workspace = () => {
             data: { roomId }
         }).then(response => {
             // console.log('ALl messages GET -----------------------------')
-            setAllDbFetchedMessages(prevAllDbFetchedMessages => {
-                return [...response.data]
-            })
+            setAllDbFetchedMessages(response.data);
         }).catch(err => {
             // console.log('ROOM CREATE ERROR', err.response.data);
             toast.error(err.response.data.error);
@@ -145,6 +130,7 @@ const Workspace = () => {
             socketRef.current.on('connect_failed', (err) => handleErrors(err));
             await getAllFilesInRoom();
             await fetchDbMessages();
+            await getAllTodosFromDB(token, setTodos);
 
             console.log('Socket Connection Done')
             const userDeatils = location.state?.userDeatils;
@@ -236,6 +222,7 @@ const Workspace = () => {
     const handleLeaveRoom = async () => {
         await updateFilesInRoom();
         await pushToDbMessages();
+        await updateAllTodos(token, todos);
         reactNavigate('/');
     }
 

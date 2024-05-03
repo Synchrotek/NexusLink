@@ -36,17 +36,24 @@ const userSchema = new mongoose.Schema({
     },
     todos: [
         {
-            data: {
+            checked: {
+                type: Boolean,
+            },
+            deadline: {
                 type: String,
             },
-            done: {
+            priority: {
                 type: String,
-                default: false
+                default: "1",
+            },
+            value: {
+                type: String,
+                default: "",
             },
             createdAt: {
                 type: Date,
                 default: Date.now()
-            }
+            },
         }
     ],
     resetPasswordToken: {

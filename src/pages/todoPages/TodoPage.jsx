@@ -7,9 +7,9 @@ import { WorkspaceContext } from '../../context/WorkspaceProvider';
 import { toast } from 'react-hot-toast';
 
 const TodoPage = () => {
-    const { isTodoApOpen, setIsTodoApOpen } = useContext(WorkspaceContext);
+    const { isTodoApOpen, setIsTodoApOpen, todos, setTodos } = useContext(WorkspaceContext);
     const [newTodo, setNewTodo] = useState('');
-    const [todos, setTodos] = useState([]);
+    // const [todos, setTodos] = useState([]);
     const [editTodoId, setEditTodoId] = useState(-1);
     const [deadline, setDeadline] = useState('');
     const [priority, setPriority] = useState('1');
@@ -173,8 +173,8 @@ const TodoPage = () => {
                 return tabSelected === 2 ? todo.checked : !todo.checked
             })
         }
-        return (<div>
-            {filteredTodos.map((todo, index) => (<div
+        return (
+            filteredTodos.map((todo, index) => (<div
                 className="bg-orange-700 m-[2%] flex flex-col gap-2 items-start rounded-md p-2"
                 key={index}>
                 <div className='flex justify-center items-center gap-2'>
@@ -207,14 +207,14 @@ const TodoPage = () => {
                     ><MdDeleteForever /></button>
                 </div>
             </div>
-            ))}
-        </div>)
+            ))
+        )
     }
 
     return (
         <div className={`absolute min-w-[80vw] bg-[#153448] z-50 top-0 h-[95%] 
         mt-2 mb-4 transition-all ${isTodoApOpen ? 'left-0' : '-left-[100%]'}`}>
-            <div className='flex mx-[10%] items-center pb-[3%] pt-[5%] justify-start border-b-2'>
+            <div className='flex mx-[10%] h-[10%] items-center pb-[3%] pt-[5%] justify-start border-b-2'>
                 <IoArrowBackSharp
                     onClick={() => setIsTodoApOpen(false)}
                     className='cursor-pointer text-xl hover:scale-150 hover:text-slate-300 transition-all rounded-lg'
@@ -226,7 +226,7 @@ const TodoPage = () => {
             <div>
                 {TodoForm()}
             </div>
-            <div role="tablist" className="tabs tabs-bordered mx-5">
+            <div role="tablist" className="tabs tabs-bordered h-[5%] mx-5">
                 <a role="tab"
                     className={`tab ${tabSelected === 1 && 'tab-active'}`}
                     onClick={() => setTabSelected(1)}
@@ -240,7 +240,9 @@ const TodoPage = () => {
                     onClick={() => setTabSelected(3)}
                 >Pending</a>
             </div>
-            {ToDoListShow()}
+            <div className='bg-black h-[70%] overflow-y-scroll'>
+                {ToDoListShow()}
+            </div>
         </div>
 
         // MdDeleteForever CiEdit CiCircleCheck
