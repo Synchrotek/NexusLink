@@ -3,10 +3,12 @@ import { FaFile } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
 
 const FileListBar = ({
-    file, handleCurrentSelectedFileRefChange, handleDeleteFile
+    file, handleCurrentSelectedFileRefChange, handleDeleteFile,
+    currentSelectedFileIndexRef
 }) => {
     const HanleSelectAnewFile = () => {
         // console.log('FROM FL:', file);
+        currentSelectedFileIndexRef.current = file.fileId;
         handleCurrentSelectedFileRefChange(file);
         // setCurrentSelectedFile(file);
     }

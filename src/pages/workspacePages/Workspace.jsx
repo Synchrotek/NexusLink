@@ -216,9 +216,7 @@ const Workspace = () => {
         }
     }
     const handleCurrentSelectedFileRefChange = (file) => {
-        // currentSelectedFileIndexRef.current = files.indexOf(file);
         setCurrentSelectedFile(file);
-        // console.log('file clicked: ', files.indexOf(file));
     }
     const handleCopyRoomId = async () => {
         try {

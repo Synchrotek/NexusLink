@@ -10,7 +10,7 @@ const UpperSideBar = ({
     connectedUsers, files, setFiles,
     handleCurrentSelectedFileRefChange
 }) => {
-    const { setCurrentSelectedFileIndex } = useContext(WorkspaceContext);
+    const { currentSelectedFileIndexRef } = useContext(WorkspaceContext);
     const [isFilesTabOpen, setIsFilesTabOpen] = useState(true);
     const [isFileCreating, setIsFileCreating] = useState(false);
     const [newFileName, setNewFileName] = useState('');
@@ -66,6 +66,7 @@ const UpperSideBar = ({
                     file={file}
                     handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
                     handleDeleteFile={handleDeleteFile}
+                    currentSelectedFileIndexRef={currentSelectedFileIndexRef}
                 />
 
             ))}

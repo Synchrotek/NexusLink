@@ -16,22 +16,11 @@ const CodeEditor = ({
     useEffect(() => {
         if (socketRef.current) {
             socketRef.current.on(SOCKET_ACTIONS.CODE_CHANGE, ({ files, fileId }) => {
-                // console.log('-----------------------------');
-                // console.log(files.find(file => file.fileId === fileId));
-
                 setFiles(files);
-                if (isNaN(currentSelectedFileIndexRef.current.fileId)) {
-                    currentSelectedFileIndexRef.current = 0;
-                }
-                // currentSelectedFileIndexRef.current = fileId - 1;
-
-
-                // if (currentSelectedFile.fileId === fileId) {
-                //     setCurrentSelectedFile(files.find(file => file.fileId === fileId));
-                // }
-                // console.log(currentSelectedFile, currentSelectedFileIndex);
                 console.log('lllll', currentSelectedFileIndexRef.current, fileId)
-                handleCurrentSelectedFileRefChange(files[currentSelectedFileIndexRef.current]);
+                if (currentSelectedFileIndexRef.current === fileId) {
+                    handleCurrentSelectedFileRefChange(files[currentSelectedFileIndexRef.current - 1]);
+                }
             });
         } else {
             console.log('Socket code-sync error! !!!!!!!!!');
