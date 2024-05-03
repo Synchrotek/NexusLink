@@ -8,7 +8,7 @@ const WorkspaceProvider = ({ children }) => {
     const socketRef = useRef(null);
     const [allMessages, setAllMessages] = useState([]);
     const [allDbFetchedMessages, setAllDbFetchedMessages] = useState([]);
-    const [currentSelectedFileIndex, setCurrentSelectedFileIndex] = useState(0);
+    const currentSelectedFileIndexRef = useRef(0);
     const [files, setFiles] = useState([
         {
             fileId: 'demo', filename: 'demo',
@@ -23,7 +23,7 @@ const WorkspaceProvider = ({ children }) => {
             currentSelectedFile, setCurrentSelectedFile,
             allMessages, setAllMessages,
             allDbFetchedMessages, setAllDbFetchedMessages,
-            currentSelectedFileIndex, setCurrentSelectedFileIndex,
+            currentSelectedFileIndexRef,
             files, setFiles
         }}>
             {children}

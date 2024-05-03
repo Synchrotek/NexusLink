@@ -31,6 +31,7 @@ const Workspace = () => {
         currentSelectedFile, setCurrentSelectedFile,
         allDbFetchedMessages, setAllDbFetchedMessages,
         allMessages, setAllMessages,
+        currentSelectedFileIndexRef,
         files, setFiles,
     } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
@@ -215,6 +216,7 @@ const Workspace = () => {
         }
     }
     const handleCurrentSelectedFileRefChange = (file) => {
+        // currentSelectedFileIndexRef.current = files.indexOf(file);
         setCurrentSelectedFile(file);
         // console.log('file clicked: ', files.indexOf(file));
     }
