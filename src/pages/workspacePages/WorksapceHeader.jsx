@@ -1,14 +1,17 @@
 /* eslint-disable react/prop-types */
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { MdMessage } from "react-icons/md";
 import { FaCode } from "react-icons/fa";
+import { MdSyncDisabled, MdOutlineSync, MdMessage } from "react-icons/md";
 import { useContext, useEffect } from "react";
 import { WorkspaceContext } from "../../context/WorkspaceProvider";
 
 const WorksapceHeader = ({
     setEditorLanguage, setEditorTheme, isChatSelected, toggleIsChatSelected
 }) => {
-    const { currentSelectedFile } = useContext(WorkspaceContext);
+    const {
+        currentSelectedFile,
+        isFilesSyncing, setIsFilesSyncing
+    } = useContext(WorkspaceContext);
 
     // Editor dynamic properties -------------------------------------
     const languagesAvailable = [
@@ -31,6 +34,10 @@ const WorksapceHeader = ({
         console.log('currentSelectedFile: ', currentSelectedFile);
         console.log('currentSelectedFileName: ', currentSelectedFile.filename);
     }, [currentSelectedFile])
+
+    const toggleIsFilesSyncing = () => {
+        setIsFilesSyncing(prevIsFilesSyncing => !prevIsFilesSyncing);
+    }
 
     const WorksapcePageHeader = () => (
         <>
@@ -63,6 +70,16 @@ const WorksapceHeader = ({
                 </select>
 
                 {/* ---------------------------------------------------- */}
+                <button className="btn tooltip tooltip-bottom w-14 mx-1 text-lg flex justify-center z-40"
+                    data-tip={isFilesSyncing ? "Turn off sync" : "Turn on sync"}
+                    onClick={toggleIsFilesSyncing}
+                >
+                    {isFilesSyncing ? (
+                        <MdOutlineSync />
+                    ) : (
+                        <MdSyncDisabled />
+                    )}
+                </button>
                 <button className="btn tooltip tooltip-bottom w-14 mx-1 flex justify-center z-40"
                     data-tip={isChatSelected ? "Back to Code" : "See Chats"}
                     onClick={toggleIsChatSelected}
@@ -73,7 +90,7 @@ const WorksapceHeader = ({
                         <MdMessage className="text-lg" />
                     )}
                 </button>
-            </div >
+            </div>
         </>);
 
     return (

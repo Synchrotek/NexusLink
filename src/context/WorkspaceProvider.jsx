@@ -17,6 +17,7 @@ const WorkspaceProvider = ({ children }) => {
     ]);
     const [currentSelectedFile, setCurrentSelectedFile] = useState(files[0]);
     const [selectedUserProfile, setSelectedUserProfile] = useState();
+    const [isFilesSyncing, setIsFilesSyncing] = useState(true);
     const [isTodoApOpen, setIsTodoApOpen] = useState(false);
     const [todos, setTodos] = useState([]);
 
@@ -29,6 +30,7 @@ const WorkspaceProvider = ({ children }) => {
             currentSelectedFileIndexRef,
             files, setFiles,
             selectedUserProfile, setSelectedUserProfile,
+            isFilesSyncing, setIsFilesSyncing,
             isTodoApOpen, setIsTodoApOpen,
             todos, setTodos,
         }}>

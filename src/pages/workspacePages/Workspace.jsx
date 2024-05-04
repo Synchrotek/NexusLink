@@ -21,8 +21,9 @@ const Workspace = () => {
         allDbFetchedMessages, setAllDbFetchedMessages,
         allMessages, setAllMessages,
         files, setFiles,
+        isFilesSyncing,
         setIsTodoApOpen,
-        todos, setTodos
+        todos, setTodos,
     } = useContext(WorkspaceContext);
     const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
@@ -192,7 +193,8 @@ const Workspace = () => {
                     return file;
                 }
             })
-            if (socketRef.current) {
+            if (socketRef.current && isFilesSyncing) {
+                console.log('emitting CODE_CHANGE ppppppppppppppppppppppppppppppppppppppp');
                 socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
                     roomId, files: newFiles, fileId: currentSelectedFile.fileId
                 })
@@ -200,7 +202,7 @@ const Workspace = () => {
             return newFiles;
         });
         console.log(files[0]);
-        if (socketRef.current) {
+        if (socketRef.current && isFilesSyncing) {
             socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
                 roomId, files, fileId: currentSelectedFile.fileId
             })

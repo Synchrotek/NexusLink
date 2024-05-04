@@ -11,13 +11,12 @@ const CodeEditor = ({
 
 }) => {
     const {
-        currentSelectedFile, currentSelectedFileIndexRef,
+        currentSelectedFile, currentSelectedFileIndexRef, isFilesSyncing
     } = useContext(WorkspaceContext);
     useEffect(() => {
-        if (socketRef.current) {
+        if (socketRef.current && isFilesSyncing) {
             socketRef.current.on(SOCKET_ACTIONS.CODE_CHANGE, ({ files, fileId }) => {
                 setFiles(files);
-                console.log('lllll', currentSelectedFileIndexRef.current, fileId)
                 if (currentSelectedFileIndexRef.current === fileId) {
                     handleCurrentSelectedFileRefChange(files[currentSelectedFileIndexRef.current - 1]);
                 }
@@ -37,6 +36,7 @@ const CodeEditor = ({
         <Editor className='bg pt-2'
             width="100%" height="100%"
             theme={editorTheme}
+            defaultLanguage='javascript'
             language={editorLanguage}
             value={currentSelectedFile.fileContent}
             onChange={handleFileChange}
