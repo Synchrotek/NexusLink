@@ -6,7 +6,9 @@ import { useContext, useEffect } from "react";
 import { WorkspaceContext } from "../../context/WorkspaceProvider";
 
 const WorksapceHeader = ({
-    setEditorLanguage, setEditorTheme, isChatSelected, toggleIsChatSelected
+    setEditorTheme,
+    handleFileLanguageChange,
+    isChatSelected, toggleIsChatSelected
 }) => {
     const {
         currentSelectedFile,
@@ -24,12 +26,6 @@ const WorksapceHeader = ({
         'vs-dark', 'light'
     ]
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const isActive = (path) => {
-        return (location.pathname === path);
-    }
-
     useEffect(() => {
         console.log('currentSelectedFile: ', currentSelectedFile);
         console.log('currentSelectedFileName: ', currentSelectedFile.filename);
@@ -37,6 +33,10 @@ const WorksapceHeader = ({
 
     const toggleIsFilesSyncing = () => {
         setIsFilesSyncing(prevIsFilesSyncing => !prevIsFilesSyncing);
+    }
+
+    const handleLanguageChange = (e) => {
+        handleFileLanguageChange(e.target.value);
     }
 
     const WorksapcePageHeader = () => (
@@ -49,7 +49,8 @@ const WorksapceHeader = ({
                 {/* ---------------------------------------------------- */}
 
                 <select className="select select-bordered capitalize w-full"
-                    onChange={e => setEditorLanguage(e.target.value)}
+                    onChange={handleLanguageChange}
+                    value={currentSelectedFile.language}
                 >{languagesAvailable.map((eachLanguage) => (
                     <option key={eachLanguage}
                         value={eachLanguage}>

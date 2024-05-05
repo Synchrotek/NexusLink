@@ -24,8 +24,8 @@ const Workspace = () => {
         isFilesSyncing,
         setIsTodoApOpen,
         todos, setTodos,
+        editorLanguage,
     } = useContext(WorkspaceContext);
-    const [editorLanguage, setEditorLanguage] = useState('javaScript');
     const [editorTheme, setEditorTheme] = useState('vs-dark');
     const [isChatSelected, setIsChatSelected] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState([]);
@@ -184,11 +184,41 @@ const Workspace = () => {
         setIsChatSelected(prevIsChatSelected => !prevIsChatSelected);
     }
     const handleFileChange = (newFileContent) => {
+        console.log('newFileContent: ', newFileContent);
         setFiles(prevFiles => {
             const newFiles = prevFiles.map(file => {
                 if (file.fileId === currentSelectedFile.fileId) {
                     // currentSelectedFileIndexRef.current = files.indexOf(file);
                     return { ...file, fileContent: newFileContent }
+                } else {
+                    return file;
+                }
+            })
+            if (socketRef.current && isFilesSyncing) {
+                console.log('emitting CODE_CHANGE ppppppppppppppppppppppppppppppppppppppp');
+                socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
+                    roomId, files: newFiles, fileId: currentSelectedFile.fileId
+                })
+            }
+            return newFiles;
+        });
+        console.log(files[0]);
+        if (socketRef.current && isFilesSyncing) {
+            socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
+                roomId, files, fileId: currentSelectedFile.fileId
+            })
+        }
+    }
+    const handleFileLanguageChange = (newFileLanguage) => {
+        console.log('newFileLanguage: ', newFileLanguage);
+        setCurrentSelectedFile(prevCurrentSelectedFile => {
+            return { ...prevCurrentSelectedFile, language: newFileLanguage }
+        })
+        setFiles(prevFiles => {
+            const newFiles = prevFiles.map(file => {
+                if (file.fileId === currentSelectedFile.fileId) {
+                    // currentSelectedFileIndexRef.current = files.indexOf(file);
+                    return { ...file, language: newFileLanguage }
                 } else {
                     return file;
                 }
@@ -263,7 +293,8 @@ const Workspace = () => {
         </div>
         <div className="w-full h-screen p-0 my-0 ml-3 overflow-x-hidden">
             <WorksapceHeader
-                setEditorLanguage={setEditorLanguage} setEditorTheme={setEditorTheme}
+                setEditorTheme={setEditorTheme}
+                handleFileLanguageChange={handleFileLanguageChange}
                 isChatSelected={isChatSelected}
                 toggleIsChatSelected={toggleIsChatSelected}
             />
