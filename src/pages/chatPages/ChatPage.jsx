@@ -2,6 +2,7 @@
 import { ImAttachment } from "react-icons/im";
 import { FiSend } from "react-icons/fi";
 import { uploadFileToDb } from '../../utils/apiCalls/file.apicalls.js'
+import ReactScrollToBottom from 'react-scroll-to-bottom';
 import MessageComponent from './MessageComponent.jsx'
 import { useContext, useEffect, useState } from "react";
 import SOCKET_ACTIONS from "../../utils/socketConn/SocketActions.js";
@@ -14,6 +15,7 @@ const ChatPage = ({ isChatSelected, roomId, fetchDbMessages }) => {
     const currentUser = JSON.parse(localStorage.getItem('user'));
     const [selectedFileData, setSelectedFileData] = useState(undefined)
     const [loader, setLoader] = useState(false);
+    const [senderObject, setSenderObject] = useState()
     const [currentMessageInput, setCurrentMessageInput] = useState(
         {
             attachments: [
@@ -44,7 +46,8 @@ const ChatPage = ({ isChatSelected, roomId, fetchDbMessages }) => {
                 if (messageObject.roomId) {
                     setAllMessages(prevAllMessages => {
                         return [...prevAllMessages, messageObject]
-                    })
+                    });
+                    setSenderObject(senderObject);
                 } else {
                     setAllMessages([]);
                     fetchDbMessages();
@@ -101,18 +104,22 @@ const ChatPage = ({ isChatSelected, roomId, fetchDbMessages }) => {
     return (<div className={`absolute z-20 w-full h-[90%] transition-all
     ${isChatSelected ? 'right-0' : '-right-[110%]'}
     `}>
-        <div className='bg-orange-400 w-full h-[90%] text-black overflow-y-scroll hideScrollBar'>
-            {allDbFetchedMessages.map((msg) => (
-                <MessageComponent key={`${msg.createdAt}${msg.content}`}
-                    message={msg} currentUserId={currentUser._id}
-                />
-            ))}
-            {allMessages.map((msg) => (
-                <MessageComponent key={`${msg.createdAt}${msg.content}`}
-                    message={msg} currentUserId={currentUser._id}
-                />
-            ))}
-        </div>
+        <ReactScrollToBottom className="bg-[#F8C794] w-full h-[90%] text-black overflow-y-scroll hideScrollBar">
+            <div >
+                {allDbFetchedMessages.map((msg) => (
+                    <MessageComponent key={`${msg.createdAt}${msg.content}`}
+                        message={msg} currentUserId={currentUser._id}
+                        senderObject={senderObject}
+                    />
+                ))}
+                {allMessages.map((msg) => (
+                    <MessageComponent key={`${msg.createdAt}${msg.content}`}
+                        message={msg} currentUserId={currentUser._id}
+                        senderObject={senderObject}
+                    />
+                ))}
+            </div>
+        </ReactScrollToBottom>
         <form className='h-[10%] flex w-full items-center px-2 my-2'
             encType="multipart/form-data"
         >

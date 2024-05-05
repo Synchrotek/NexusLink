@@ -6,7 +6,7 @@ import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions';
 import { WorkspaceContext } from '../../context/WorkspaceProvider';
 
 const CodeEditor = ({
-    socketRef, setFiles, editorLanguage, editorTheme,
+    socketRef, setFiles, editorTheme,
     handleCurrentSelectedFileRefChange, handleFileChange
 
 }) => {
@@ -41,6 +41,7 @@ const CodeEditor = ({
         <Editor className='bg pt-2'
             width="100%" height="100%"
             theme={editorTheme}
+            defaultLanguage={currentSelectedFile.language}
             language={currentSelectedFile.language}
             value={currentSelectedFile.fileContent}
             onChange={handleFileChange}

@@ -19,6 +19,7 @@ const WorkspaceProvider = ({ children }) => {
     const [selectedUserProfile, setSelectedUserProfile] = useState();
     const [isFilesSyncing, setIsFilesSyncing] = useState(true);
     const [isTodoApOpen, setIsTodoApOpen] = useState(false);
+    const [isRoomDetailsOpen, setIsRoomDetailsOpen] = useState(false);
     const [todos, setTodos] = useState([]);
 
     return (
@@ -32,6 +33,7 @@ const WorkspaceProvider = ({ children }) => {
             selectedUserProfile, setSelectedUserProfile,
             isFilesSyncing, setIsFilesSyncing,
             isTodoApOpen, setIsTodoApOpen,
+            isRoomDetailsOpen, setIsRoomDetailsOpen,
             todos, setTodos,
         }}>
             {children}

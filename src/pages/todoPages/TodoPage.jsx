@@ -240,7 +240,7 @@ const TodoPage = () => {
                     onClick={() => setTabSelected(3)}
                 >Pending</a>
             </div>
-            <div className='bg-black h-[70%] overflow-y-scroll'>
+            <div className='h-[70%] overflow-y-scroll'>
                 {ToDoListShow()}
             </div>
         </div>

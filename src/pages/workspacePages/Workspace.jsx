@@ -13,6 +13,7 @@ import ChatPage from '../chatPages/ChatPage.jsx';
 import axios from 'axios';
 import TodoPage from '../todoPages/TodoPage.jsx';
 import { getAllTodosFromDB, updateAllTodos } from '../../utils/apiCalls/user.apicalls.js';
+import RoomDetails from './RoomDetails.jsx';
 
 const Workspace = () => {
     const {
@@ -22,13 +23,14 @@ const Workspace = () => {
         allMessages, setAllMessages,
         files, setFiles,
         isFilesSyncing,
-        setIsTodoApOpen,
+        setIsTodoApOpen, setIsRoomDetailsOpen,
         todos, setTodos,
         editorLanguage,
     } = useContext(WorkspaceContext);
     const [editorTheme, setEditorTheme] = useState('vs-dark');
     const [isChatSelected, setIsChatSelected] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState([]);
+    const [roomDetails, setRoomDetails] = useState(undefined);
 
     const location = useLocation();
     const reactNavigate = useNavigate();
@@ -94,7 +96,8 @@ const Workspace = () => {
         }).then(response => {
             // console.log('ALl FIles from room POST -----------------------------')
             console.log('Recived Data --', response.data);
-            setFiles(response.data)
+            setFiles(response.data.files);
+            setRoomDetails(response.data);
         }).catch(err => {
             console.log('FILE FETCH ERROR FROM ROOM', err.response.data);
             toast.error(err.response.data.error);
@@ -265,11 +268,12 @@ const Workspace = () => {
     return (<div className='##mainwrap h-screen flex p-2 overflow-y-hidden relative'>
         <div className="h-full flex flex-col justify-between">
             <div className="h-[60%]">
-                <div className="p-1">
+                <button className="p-1 w-full"
+                    onClick={() => setIsRoomDetailsOpen(true)}>
                     <h2 className='gifLogoAnimation py-3 text-xl text-white font-mono flex justify-center items-center'>
-                        Synchrotek
+                        {roomDetails ? roomDetails.name : 'Synchrotek'}
                     </h2>
-                </div>
+                </button>
                 {/* ----------------------------------- */}
                 <UpperSideBar
                     connectedUsers={connectedUsers}
@@ -279,6 +283,9 @@ const Workspace = () => {
                 />
             </div>
             <TodoPage />
+            {roomDetails &&
+                <RoomDetails roomDetails={roomDetails} />
+            }
             <div className='flex flex-col justify-end w-full gap-4 z-20 h-[40%] '>
                 <button className='btn btn-accent font-semibold'
                     onClick={() => setIsTodoApOpen(true)}

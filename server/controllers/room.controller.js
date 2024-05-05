@@ -85,8 +85,8 @@ exports.getAllFilesInRoom = async (req, res) => {
                 error: 'This room does not exists'
             });
         }
-        const files = existingRoom.files;
-        return res.status(200).json(files);
+        const roomDetails = existingRoom;
+        return res.status(200).json(roomDetails);
     }).catch((err) => {
         console.log('FETCHING ALL FILES IN A ROOM FROM DATABASE ERROR', err);
         return res.status(400).json({
