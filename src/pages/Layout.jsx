@@ -15,7 +15,7 @@ const Layout = ({ children, navFixed, className }) => {
             <div className={`navbar bg-slate-600 flex justify-between px-4
                 ${navFixed ? 'fixed' : ''}`}>
                 <Link to='/' className='text-white'>
-                    CollabCode
+                    NexusLink
                 </Link>
                 <div className="navbar-end gap-3">
                     {isAuth() ? (<>

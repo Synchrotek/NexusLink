@@ -1,4 +1,4 @@
-### CollabCode
+### NexusLink
 A collaborative coding web application built with React, Node.js, Express.js, Socket.io, and MongoDB. This platform enables multiple users to collaborate on coding projects in real-time, providing features such as synchronized code editing, group chat, to-do lists, notifications, and more.
 
 <!-- ### Features
@@ -11,11 +11,11 @@ A collaborative coding web application built with React, Node.js, Express.js, So
 
 ## Getting Started
 - Clone the repository: 
-```git clone https://github.com/Synchrotek/CollabCode.git```
-- Navigate to the project directory: cd CollabCode
+```git clone https://github.com/Synchrotek/NexusLink.git```
+- Navigate to the project directory: cd NexusLink
 - Install dependencies: npm install ( in the root directory )
 - Set up MongoDB and configure the connection as given below.
-- Create .env in CollabCode directory and add :
+- Create .env in NexusLink directory and add :
   ```
   VITE_ENDPOINT=[Your_backend_server_URL]
   MONGO_URI=[Your_mongodbDrivers_connection_string]

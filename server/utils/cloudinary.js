@@ -14,7 +14,7 @@ const uploadOnCloudinary = async (localFilePath) => {
         }
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: 'auto',
-            folder: 'CollabCode',
+            folder: 'nexuslink',
         });
         console.log(response);
         fs.unlinkSync(localFilePath);
