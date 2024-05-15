@@ -39,10 +39,10 @@ MongoDB | daisyUI
 - Collaborate with other users using the real-time code editor and group chat.
 - Use Todo sidebar to set personalized goals with deadlines and priorities
   
-## How to Contribute
+## Contribution
 Explore NexusLink's capabilities and witness how it boosts collaboration. Visit the [NexusLink GitHub Repository](https://github.com/Synchrotek/NexusLink.git) to access the code and contribute. Community contributions are welcomed to enhance NexusLink, including developers, designers, testers, and documentation enthusiasts.there are many ways you can contribute:
-- Code Contributions: Help to enhance features, fix bugs, and optimize performance by submitting pull requests with your code changes.
-- Documentation: Improve this README, Provide better inline documentation to make it easier for others to understand and use NexusLink.
-- Testing: Help to ensure the quality and reliability of NexusLink by testing new features, reporting bugs, and providing feedback.
+- **Code Contributions**: Help to enhance features, fix bugs, and optimize performance by submitting pull requests with your code changes.
+- **Documentation**: Improve this README, Provide better inline documentation to make it easier for others to understand and use NexusLink.
+- **Testing**: Help to ensure the quality and reliability of NexusLink by testing new features, reporting bugs, and providing feedback.
 - Feature Requests: Share your ideas and suggestions for new features or improvements that would make NexusLink even more useful for our users.
 
