@@ -17,7 +17,6 @@ exports.createNewRoom = async (req, res) => {
                 },
             ]
         });
-        console.log(newRoom);
         await newRoom.save().then(result => {
             return res.status(201).json({
                 message: 'New room created.'

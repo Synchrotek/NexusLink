@@ -35,10 +35,6 @@ const ChatPage = ({ isChatSelected, roomId, fetchDbMessages }) => {
     );
 
     useEffect(() => {
-        console.log('Chat PAGE ERNDERED ooooooooooooooooooooooooooooooooooooooooo');
-    }, [])
-
-    useEffect(() => {
         if (socketRef.current) {
             socketRef.current.on(SOCKET_ACTIONS.SEND_MESSAGE, ({
                 messageObject, senderObject
@@ -61,14 +57,7 @@ const ChatPage = ({ isChatSelected, roomId, fetchDbMessages }) => {
         }
     }, [socketRef.current])
 
-    useEffect(() => {
-        console.log('All Messages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;');
-        console.log(allMessages);
-        console.log(allDbFetchedMessages);
-    }, [allMessages, allDbFetchedMessages])
-
     const sendMessage = async (e) => {
-        console.log('btn clicked ---------------------');
         e.preventDefault();
         let uploaeAttachments;
         if (selectedFileData) {

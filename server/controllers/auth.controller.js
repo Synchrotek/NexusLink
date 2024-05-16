@@ -1,43 +1,9 @@
 const User = require('../models/user.model.js');
 const jwt = require('jsonwebtoken');
-const { expressjwt: ejwt } = require('express-jwt');
 const lodashLib = require('lodash');
-const nodemailer = require('nodemailer');
+const sendMail = require('../utils/sendmail.js');
 
-const transporter = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
-    auth: {
-        user: process.env.MAILTRAP_SMTP_USER,
-        pass: process.env.MAILTRAP_SMTP_PASSWORD,
-    },
-});
-
-// exports.signup = (req, res) => {
-// console.log('REQ BODY ON SIGNUP:', req.body);
-// const { name, email, password } = req.body;
-
-// User.findOne({ email }).then(user => {
-//     if (user) {
-//         return res.status(400).json({
-//             error: 'Email is taken'
-//         });
-//     }
-
-//     let newUser = new User({ name, email, password });
-//     newUser.save().then(success => {
-//         return res.json({
-//             message: 'Singup succes! Please SignIn'
-//         });
-//     }).catch(err => {
-//         console.log('SINGUP ERROR', err);
-//         return res.status(400).json({
-//             error: err
-//         });
-//     });
-// });
-// };
-
+// controller for SIGNUP handle -------------------------------------------------------------
 exports.signup = (req, res) => {
     const { name, email, password, profilePic, bio } = req.body;
 
@@ -76,21 +42,15 @@ exports.signup = (req, res) => {
                 <p>${process.env.CLIENT_URL}</p>
             `,
         }
-        await transporter.sendMail(emailDataToSend)
-            .then(emailSent => {
-                console.log("SIGNUP EMAIL SENT", emailSent);
-                return res.json({
-                    message: `Email has been sent to ${email}. Follow the instruction to activate your account`
-                });
-            }).catch(err => {
-                // console.log('SIGNUP EMAIL SENT ERROR', err)
-                return res.json({
-                    message: err.message
-                })
-            })
+        const { success, message } = await sendMail(
+            emailDataToSend,
+            `Email has been sent to ${emailDataToSend.to}. Follow the instruction to activate your account`
+        );
+        return res.status(success ? 200 : 500).json(message)
     });
 };
 
+// controller for ACCOUNT-ACTIVATINO -------------------------------------------------------
 exports.accountActivation = (req, res) => {
     const { token } = req.body;
 
@@ -129,6 +89,7 @@ exports.accountActivation = (req, res) => {
     }
 }
 
+// controller for SINGIN handle -------------------------------------------------------------
 exports.signin = (req, res) => {
     const { email, password } = req.body;
     User.findOne({ email }).then(user => {
@@ -160,30 +121,7 @@ exports.signin = (req, res) => {
     })
 }
 
-exports.requireSignin = ejwt({
-    // user data will be available in req.auth
-    secret: process.env.JWT_SECRET,
-    algorithms: ['HS256']
-})
-
-exports.requireSigninAsAdmin = (req, res, next) => {
-    User.findById(req.auth._id)
-        .then(user => {
-            if (!user) {
-                throw new Error('User not found');
-            }
-            if (user.role !== 'admin') {
-                throw new Error('Admin resource. Access denied');
-            }
-            res.profile = user;
-            next();
-        }).catch(err => {
-            return res.status(401).json({
-                error: err.message
-            })
-        })
-}
-
+// controller for FORGOT-PASSWORD -----------------------------------------------------------
 exports.forgotPassword = (req, res) => {
     const { email } = req.body;
     User.findOne({ email })
@@ -220,19 +158,13 @@ exports.forgotPassword = (req, res) => {
             }
 
             return user.updateOne({ resetPasswordToken: token })
-                .then(async (success) => {
-                    await transporter.sendMail(emailDataToSend)
-                        .then(emailSent => {
-                            console.log("RESET PASSWORD EMAIL SENT", emailSent);
-                            return res.json({
-                                message: `Email has been sent to ${email}. Follow the instruction to Reset your password`
-                            });
-                        }).catch(err => {
-                            // console.log('RESET PASSWORD EMAIL SENT ERROR', err)
-                            return res.json({
-                                message: err.message
-                            })
-                        })
+                .then(async (result) => {
+                    const { success, message } = await sendMail(
+                        emailDataToSend,
+                        `Email has been sent to ${email}. Follow the instruction to Reset your password`
+                    );
+                    console.log(message);
+                    return res.status(success ? 200 : 500).json(message)
                 }).catch(err => {
                     console.log('RESET PASSWORD LINK ERROR', err);
                     return res.status(401).json({
@@ -246,6 +178,7 @@ exports.forgotPassword = (req, res) => {
         })
 }
 
+// controller for RESET-PASSWORD ------------------------------------------------------------
 exports.resetPassword = (req, res) => {
     const { resetPasswordToken, newPassword } = req.body;
     if (resetPasswordToken) {

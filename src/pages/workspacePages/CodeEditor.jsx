@@ -33,10 +33,6 @@ const CodeEditor = ({
         };
     }, [socketRef.current, setFiles]);
 
-    useEffect(() => {
-        console.log('editorLanguage 00000000000000000000 -', currentSelectedFile)
-    }, [currentSelectedFile])
-
     return (
         <Editor className='bg pt-2'
             width="100%" height="100%"

@@ -10,7 +10,6 @@ const FileListBar = ({
         // console.log('FROM FL:', file);
         currentSelectedFileIndexRef.current = file.fileId;
         handleCurrentSelectedFileRefChange(file);
-        // setCurrentSelectedFile(file);
     }
 
     return (

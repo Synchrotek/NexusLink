@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { v4 as uuidV4, validate } from 'uuid'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Toaster, toast } from 'react-hot-toast'
+import { toast } from 'react-hot-toast'
 import axios from 'axios'
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from './Layout'
@@ -139,7 +139,6 @@ const RoomSelect = () => {
 
     return (
         <Layout navFixed={true} className='backgroundWallpaper_dim  min-h-screen flex flex-col items-center justify-center min-w-96 mx-auto'>
-            <Toaster />
             <div className="rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-5 w-3/4 sm:w-1/2 md:w-1/2 lg:w-1/2 px-6 pb-10 pt-3">
                 <h1 className='text-3xl font-semibold text-center text-gray-300 my-6 mx-10'>
                     Create or Join

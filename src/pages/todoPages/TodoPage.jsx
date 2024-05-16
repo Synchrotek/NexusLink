@@ -15,10 +15,6 @@ const TodoPage = () => {
     const [priority, setPriority] = useState('1');
     const [tabSelected, setTabSelected] = useState(1);
 
-    useEffect(() => {
-        console.log('todos: -- ', todos);
-    }, [todos]);
-
     // =======================================================================
     const calcDeadline = (deadline) => {
         let dateString;
@@ -60,7 +56,6 @@ const TodoPage = () => {
     };
 
     const sortTodos = () => {
-        console.log(todos);
         setTodos((prevTodos) =>
             prevTodos.slice().sort((a, b) => {
                 const priorityA = a.priority || ""; // Default to an empty string if priority is undefined
@@ -75,7 +70,6 @@ const TodoPage = () => {
                 return priorityComparison;
             })
         );
-        console.log(todos);
     };
 
     const handleTodoFormSubmit = (e) => {
@@ -83,8 +77,6 @@ const TodoPage = () => {
         const isEmpty = (newTodo.trim() === '' && deadline === '');
 
         if (deadline === '' && !isEmpty) setDeadline(calcDeadline());
-        console.log('Deadline', deadline);
-
         if (isEmpty) {
             toast.error("Todo's input is Empty");
             return;

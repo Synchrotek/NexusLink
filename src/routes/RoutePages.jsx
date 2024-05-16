@@ -11,17 +11,19 @@ import ForgotPassword from '../pages/authPages/ForgotPassword.jsx'
 import ResetPassword from '../pages/authPages/ResetPassword.jsx'
 import Workspace from '../pages/workspacePages/Workspace.jsx'
 import WorkspaceProvider from '../context/WorkspaceProvider.jsx';
+import { Toaster } from 'react-hot-toast'
 
 const RoutePages = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path='/signup' element={<Singup />} />
-                <Route path='/signin' element={<Singin />} />
-                <Route path='/auth/activate/:token' element={<AccountActivate />} />
-                <Route path='/auth/password/forogt' element={<ForgotPassword />} />
-                <Route path='/auth/password/reset/:token' element={<ResetPassword />} />
-
+                <>
+                    <Route path='/signup' element={<Singup />} />
+                    <Route path='/signin' element={<Singin />} />
+                    <Route path='/auth/activate/:token' element={<AccountActivate />} />
+                    <Route path='/auth/password/forogt' element={<ForgotPassword />} />
+                    <Route path='/auth/password/reset/:token' element={<ResetPassword />} />
+                </>
                 {/* Private Routes ------------------------------- */}
                 <Route element={<PrivateRoutes />}>
                     <Route path='/' element={<Home />} />
@@ -34,6 +36,10 @@ const RoutePages = () => {
                     <Route path='/user' element={<UserProfile />} />
                 </Route>
             </Routes>
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+            />
         </BrowserRouter>
     )
 }

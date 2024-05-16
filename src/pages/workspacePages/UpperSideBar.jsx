@@ -17,7 +17,6 @@ const UpperSideBar = ({
     const [newFileName, setNewFileName] = useState('');
 
     const handleNewFileSubmit = (e) => {
-        console.log('handleNewFileSubmit clicked')
         e.preventDefault();
         setFiles(prevFiles => {
             return [
@@ -36,16 +35,6 @@ const UpperSideBar = ({
             return prevFiles.filter(file => file.fileId !== fileId)
         });
     }
-
-    useEffect(() => {
-        console.log('connectedUsers: ', connectedUsers);
-    }, [connectedUsers])
-
-    useEffect(() => {
-        console.log('selectedUserProfile: ', selectedUserProfile);
-    }, [selectedUserProfile])
-
-    // username, name, email, profilePic, bio
 
     const ConnectedUserList = () => {
         return (<>

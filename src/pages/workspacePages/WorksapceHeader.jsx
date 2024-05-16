@@ -26,11 +26,6 @@ const WorksapceHeader = ({
         'vs-dark', 'light'
     ]
 
-    useEffect(() => {
-        console.log('currentSelectedFile: ', currentSelectedFile);
-        console.log('currentSelectedFileName: ', currentSelectedFile.filename);
-    }, [currentSelectedFile])
-
     const toggleIsFilesSyncing = () => {
         setIsFilesSyncing(prevIsFilesSyncing => !prevIsFilesSyncing);
     }

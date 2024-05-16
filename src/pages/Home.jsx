@@ -3,7 +3,7 @@ import axios from 'axios'
 import Layout from './Layout.jsx'
 import { getCookie } from '../utils/authUtils/helper.jsx';
 import { useNavigate } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -22,7 +22,6 @@ const Home = () => {
                 Authorization: `Bearer ${token}`
             },
         }).then(response => {
-            console.log('ALL ROOMS GET', response);
             const allFetchedRooms = response.data;
             setAllRooms(allFetchedRooms);
         }).catch(err => {
@@ -53,7 +52,7 @@ const Home = () => {
             },
             data: dataToSend
         }).then(response => {
-            console.log(response.data);
+            // console.log(response.data);
             getAllRooms();
         }).catch(err => {
             console.log('ROOM CREATE ERROR', err.response.data);
@@ -62,8 +61,7 @@ const Home = () => {
     }
 
     return (
-        <Layout className=''>
-            <Toaster />
+        <Layout>
             <div className="col-d-6 offset-md-1 text-center">
                 <h1 className='p-5 pb-3 border-b-[1px] mx-[8%] text-xl'>
                     All existing rooms

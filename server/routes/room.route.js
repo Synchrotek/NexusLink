@@ -6,7 +6,7 @@ const {
     createNewRoom, getAllRooms, deleteARoom,
     updateFilesInRoom, getAllFilesInRoom
 } = require('../controllers/room.controller.js');
-const { requireSignin } = require('../controllers/auth.controller.js');
+const { requireSignin } = require('../middlewares/auth.middlewares.js');
 
 // import validators
 

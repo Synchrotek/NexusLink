@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { decodeToken } from 'react-jwt'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from '../Layout'
 
@@ -36,7 +36,8 @@ const AccountActivate = () => {
         }).then(response => {
             console.log('ACCOUNT ACTIVATION SUCCESS', response);
             setValues({ ...values, name: '' });
-            toast.success(`${response.data.message}`);
+            toast.success(response.data.message);
+            navigate('/signin');
         }).catch(err => {
             console.log('ACCOUNT ACTIVATION ERROR', err.response.data);
             toast.error(err.response.data.error);
@@ -59,7 +60,6 @@ const AccountActivate = () => {
     return (
         // <Layout className='backgroundWallpaper_dim min-h-screen flex items-center justify-center'>
         <Layout className=''>
-            <ToastContainer />
             <div className='text-2xl'>
                 {activationLink()}
             </div>

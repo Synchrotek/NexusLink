@@ -33,7 +33,7 @@ const RoomDetails = ({ roomDetails }) => {
                     <p>
                         <span className='font-semibold text-slate-100'>
                             Room Creator : </span>
-                        {roomDetails.creatorEmail}
+                        {roomDetails.creator.creatorEmail}
                     </p>
                     <p>
                         <span className='font-semibold text-slate-100'>

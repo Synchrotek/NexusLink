@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // import controller
-const { requireSignin, requireSigninAsAdmin } = require('../controllers/auth.controller.js');
+const { requireSignin, requireSigninAsAdmin } = require('../middlewares/auth.middlewares.js')
 const { readUser, updateUser, updateAllTodos, getAllTodos } = require('../controllers/user.controller.js');
 
 // import validators

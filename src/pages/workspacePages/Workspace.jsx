@@ -7,7 +7,7 @@ import { useLocation, useNavigate, Navigate, useParams } from 'react-router-dom'
 import { initSocket } from '../../utils/socketConn/socket';
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions.js';
 // import { ToastContainer, toast } from 'react-toastify';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { WorkspaceContext } from '../../context/WorkspaceProvider.jsx';
 import ChatPage from '../chatPages/ChatPage.jsx';
 import axios from 'axios';
@@ -95,7 +95,6 @@ const Workspace = () => {
             data: { roomId }
         }).then(response => {
             // console.log('ALl FIles from room POST -----------------------------')
-            console.log('Recived Data --', response.data);
             setFiles(response.data.files);
             setRoomDetails(response.data);
         }).catch(err => {
@@ -112,8 +111,7 @@ const Workspace = () => {
             },
             data: { roomId, files }
         }).then(response => {
-            // console.log('ALl FIles upload to db POST -----------------------------')
-            console.log(response.data);
+            console.log('ALl FIles upload to db POST -----------------------------')
         }).catch(err => {
             console.log('FILE UPATE DB ERROR FROM ROOM', err.response.data);
             toast.error(err.response.data.error);
@@ -175,10 +173,6 @@ const Workspace = () => {
         }
     }, [location.state?.userDeatils, reactNavigate, roomId]);
 
-    useEffect(() => {
-        console.log('files: -- ', files);
-    }, [files])
-
     // =================================================================================
     const toggleIsChatSelected = () => {
         if (isChatSelected) {
@@ -187,7 +181,7 @@ const Workspace = () => {
         setIsChatSelected(prevIsChatSelected => !prevIsChatSelected);
     }
     const handleFileChange = (newFileContent) => {
-        console.log('newFileContent: ', newFileContent);
+        // console.log('newFileContent: ', newFileContent);
         setFiles(prevFiles => {
             const newFiles = prevFiles.map(file => {
                 if (file.fileId === currentSelectedFile.fileId) {
@@ -198,14 +192,12 @@ const Workspace = () => {
                 }
             })
             if (socketRef.current && isFilesSyncing) {
-                console.log('emitting CODE_CHANGE ppppppppppppppppppppppppppppppppppppppp');
                 socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
                     roomId, files: newFiles, fileId: currentSelectedFile.fileId
                 })
             }
             return newFiles;
         });
-        console.log(files[0]);
         if (socketRef.current && isFilesSyncing) {
             socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
                 roomId, files, fileId: currentSelectedFile.fileId
@@ -213,28 +205,25 @@ const Workspace = () => {
         }
     }
     const handleFileLanguageChange = (newFileLanguage) => {
-        console.log('newFileLanguage: ', newFileLanguage);
+        // console.log('newFileLanguage: ', newFileLanguage);
         setCurrentSelectedFile(prevCurrentSelectedFile => {
             return { ...prevCurrentSelectedFile, language: newFileLanguage }
         })
         setFiles(prevFiles => {
             const newFiles = prevFiles.map(file => {
                 if (file.fileId === currentSelectedFile.fileId) {
-                    // currentSelectedFileIndexRef.current = files.indexOf(file);
                     return { ...file, language: newFileLanguage }
                 } else {
                     return file;
                 }
             })
             if (socketRef.current && isFilesSyncing) {
-                console.log('emitting CODE_CHANGE ppppppppppppppppppppppppppppppppppppppp');
                 socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
                     roomId, files: newFiles, fileId: currentSelectedFile.fileId
                 })
             }
             return newFiles;
         });
-        console.log(files[0]);
         if (socketRef.current && isFilesSyncing) {
             socketRef.current.emit(SOCKET_ACTIONS.CODE_CHANGE, {
                 roomId, files, fileId: currentSelectedFile.fileId
@@ -320,10 +309,6 @@ const Workspace = () => {
                 />
             </div>
         </div>
-        <Toaster
-            position="top-left"
-            reverseOrder={false}
-        />
     </div>
     )
 }
