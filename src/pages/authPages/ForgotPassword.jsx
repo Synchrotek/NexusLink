@@ -24,7 +24,7 @@ const ForgotPassword = () => {
             url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/forgot-password`,
             data: { email: values.email }
         }).then(response => {
-            console.log('FORGOT PASSWORD SUCCESS', response);
+            // console.log('FORGOT PASSWORD SUCCESS', response);
             toast.success(response.data);
         }).catch(err => {
             console.log('FORGOT PASSWORD ERROR', err.response.data);

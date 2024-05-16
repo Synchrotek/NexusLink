@@ -24,28 +24,11 @@ exports.signup = (req, res) => {
             { expiresIn: '10m' }
         );
 
-        const emailDataToSend = {
-            from: `"Sentinal Prime HQ👻" ${process.env.EMAIL_FROM}`, // sender address
-            to: email,
-            subject: `Account Activation Link ✔`,
-            text: "Account Activation Link",
-            html: `
-                <h1>Click on the below link</h1>
-                <h3>To Activate your Account</h3>
-                <a href="${process.env.CLIENT_URL}/auth/activate/${token}">
-                    Click here to Activate your account to Continue.
-                </a>
-                <p>${process.env.CLIENT_URL}/auth/activate/${token}</p>
-                <br /><hr /><br />
-                <p>This email is kind of sensitive</p>
-                <p>Handle with care && Have a good Day ;)</p>
-                <p>${process.env.CLIENT_URL}</p>
-            `,
-        }
-        const { success, message } = await sendMail(
-            emailDataToSend,
-            `Email has been sent to ${emailDataToSend.to}. Follow the instruction to activate your account`
-        );
+        const { success, message } = await sendMail({
+            email, token,
+            emailType: 'account-activation',
+            messageToShow: `Email has been sent to ${email}. Follow the instruction to activate your account`
+        });
         return res.status(success ? 200 : 500).json(message)
     });
 };
@@ -53,7 +36,6 @@ exports.signup = (req, res) => {
 // controller for ACCOUNT-ACTIVATINO -------------------------------------------------------
 exports.accountActivation = (req, res) => {
     const { token } = req.body;
-
     if (token) {
         jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, function (err, decoded) {
             const { name, email, password, profilePic, bio } = jwt.decode(token);
@@ -159,10 +141,12 @@ exports.forgotPassword = (req, res) => {
 
             return user.updateOne({ resetPasswordToken: token })
                 .then(async (result) => {
-                    const { success, message } = await sendMail(
-                        emailDataToSend,
-                        `Email has been sent to ${email}. Follow the instruction to Reset your password`
-                    );
+                    const { success, message } = await sendMail({
+                        email, token,
+                        emailType: 'reset-password',
+                        messageToShow: `Email has been sent to ${email}. Follow the instruction to Reset your password`
+                    });
+
                     console.log(message);
                     return res.status(success ? 200 : 500).json(message)
                 }).catch(err => {

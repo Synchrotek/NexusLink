@@ -6,6 +6,7 @@ const http = require('http')
 const { Server } = require('socket.io')
 require('dotenv').config();
 
+const PORT = process.env.PORT || 4500;
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -39,7 +40,7 @@ const connectToMongoDB = require('./db/dbConnect.js');
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 if (process.env.NODE_ENV === 'development') {
-    app.use(cors({ origin: `http://localhost:4500` }));
+    app.use(cors({ origin: `http://localhost:${PORT}` }));
 }
 
 // middlewares -------------------------------------
@@ -48,10 +49,6 @@ app.use('/api', setClientHeader, userRoutes);
 app.use('/api/rooms', setClientHeader, roomRoutes);
 app.use('/api/messages', setClientHeader, messageRoutes);
 
-const PORT = process.env.PORT || 4500;
-// app.listen(PORT, () => {
-//     console.log(`Server running: http://localhost:${PORT}`)
-// })
 server.listen(PORT, () => {
     connectToMongoDB();
     console.log(`Server running: http://localhost:${PORT}`);
