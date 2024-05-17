@@ -46,7 +46,6 @@ exports.accountActivation = (req, res) => {
                     });
                 }
                 if (err) {
-                    // console.log('JWT VERIFY IN ACCOUNT ACTIVATION ERROR', err);
                     return res.status(401).json({
                         error: 'Expired link. Please Singup again'
                     })
@@ -146,8 +145,6 @@ exports.forgotPassword = (req, res) => {
                         emailType: 'reset-password',
                         messageToShow: `Email has been sent to ${email}. Follow the instruction to Reset your password`
                     });
-
-                    console.log(message);
                     return res.status(success ? 200 : 500).json(message)
                 }).catch(err => {
                     console.log('RESET PASSWORD LINK ERROR', err);

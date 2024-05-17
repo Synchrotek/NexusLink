@@ -5,7 +5,7 @@ const currentUser = JSON.parse(localStorage.getItem('user'));
 
 export const updateAllTodos = async (token, todos) => {
     let responseData;
-    await axios({
+    currentUser && await axios({
         method: 'POST',
         url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/user/todos/update`,
         headers: {

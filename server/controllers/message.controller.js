@@ -29,7 +29,6 @@ exports.uploadFileToCloudinary = async (req, res) => {
 exports.pushMessagesIntoDB = async (req, res) => {
     try {
         const { allMessages } = req.body;
-        console.log('Push message called', allMessages);
         if (allMessages.length <= 0) {
             return res.status(400).json({
                 error: 'No messages provided in request.'
@@ -54,7 +53,6 @@ exports.getAllMessages = async (req, res) => {
     try {
         const { roomId } = req.body;
         await Message.find({ roomId }).then((allDbFetchedMessages) => {
-            console.log(roomId)
             return res.status(201).json(allDbFetchedMessages);
         }).catch((err) => {
             console.log('MESSAGES FETCHING FROM MONGODB ERROR DB', err);

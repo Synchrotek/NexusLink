@@ -20,16 +20,13 @@ exports.readUser = (req, res) => {
 
 exports.updateUser = (req, res) => {
     const { name, bio, profilePic, password } = req.body;
-    console.log('---------------------------------------------------');
-    console.log('profilePic: ', profilePic);
-    console.log('---------------------------------------------------');
     User.findById(req.auth._id).then((user) => {
         if (!user) {
             console.log('User not found');
             throw new Error('User not found');
         }
         if (!name) {
-            console.log('Name is required');
+            console.log('Name is required with min of 3 characters.');
             throw new Error('Name is required');
         }
         user.name = name;
@@ -61,7 +58,6 @@ exports.updateUser = (req, res) => {
 exports.getAllTodos = async (req, res) => {
     const { userId } = req.body;
     await User.findOne({ _id: userId }).then(async (user) => {
-        console.log('user found', user);
         if (!user) {
             return res.status(400).json({
                 error: 'This user does not exists'
@@ -80,7 +76,6 @@ exports.getAllTodos = async (req, res) => {
 exports.updateAllTodos = async (req, res) => {
     const { userId, todos } = req.body;
     await User.findOne({ _id: userId }).then(async (user) => {
-        console.log('user found', user);
         if (!user) {
             return res.status(400).json({
                 error: 'This user does not exists'

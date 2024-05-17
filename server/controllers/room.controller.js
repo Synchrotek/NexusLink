@@ -81,7 +81,7 @@ exports.getAllFilesInRoom = async (req, res) => {
     await Room.findOne({ roomId }).then(async (existingRoom) => {
         if (!existingRoom) {
             return res.status(400).json({
-                error: 'This room does not exists'
+                error: 'This room does not exists or the creator dleteed this room.'
             });
         }
         const roomDetails = existingRoom;

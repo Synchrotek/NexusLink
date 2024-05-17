@@ -166,7 +166,7 @@ const TodoPage = () => {
             })
         }
         return (
-            filteredTodos.map((todo, index) => (<div
+            filteredTodos && filteredTodos.map((todo, index) => (<div
                 className="bg-orange-700 m-[2%] flex flex-col gap-2 items-start rounded-md p-2"
                 key={index}>
                 <div className='flex justify-center items-center gap-2'>

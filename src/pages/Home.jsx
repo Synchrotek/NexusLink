@@ -74,7 +74,7 @@ const Home = () => {
                                 <h2 className="card-title">- {eachRoom.name} -</h2>
                                 <p className='text-xs'>Id: {eachRoom.roomId}</p>
                                 <p>( {eachRoom.description} )</p>
-                                <p>Creator: {eachRoom.creator.creatorEmail}</p>
+                                <p>Creator: {eachRoom.creator.cratorName}</p>
                                 <p>Created on: {eachRoom.createdAt.substring(0, 10)}</p>
                                 <div className="card-actions">
                                     <button className="btn btn-primary"

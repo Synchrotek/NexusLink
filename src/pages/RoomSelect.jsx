@@ -83,6 +83,7 @@ const RoomSelect = () => {
             creator: {
                 creatorId: currentUser._id,
                 creatorEmail: currentUser.email,
+                cratorName: currentUser.name,
             },
             name: values.roomName,
             description: values.roomDesc
