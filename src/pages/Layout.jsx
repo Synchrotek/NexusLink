@@ -1,4 +1,4 @@
-import React from 'react'
+import { FaCodeMerge } from "react-icons/fa6";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { isAuth, signout } from '../utils/authUtils/helper'
 
@@ -14,9 +14,15 @@ const Layout = ({ children, navFixed, className }) => {
             {/* NavBar --------------------------------------------- */}
             <div className={`navbar bg-slate-600 flex justify-between px-4
                 ${navFixed ? 'fixed' : ''}`}>
-                <Link to='/' className='text-white'>
-                    NexusLink
-                </Link>
+                <div className="flex gap-2 items-center">
+                    <Link to='/' className='text-white'>
+                        NexusLink
+                    </Link>
+                    <a href='https://github.com/Synchrotek/NexusLink'
+                        className='tooltip tooltip-bottom' data-tip="Source code"
+                    ><FaCodeMerge />
+                    </a>
+                </div>
                 <div className="navbar-end gap-3">
                     {isAuth() ? (<>
                         <Link to='/room'
