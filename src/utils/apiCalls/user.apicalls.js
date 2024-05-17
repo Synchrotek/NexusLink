@@ -26,7 +26,7 @@ export const updateAllTodos = async (token, todos) => {
 
 export const getAllTodosFromDB = async (token, setTodos) => {
     let responseData;
-    await axios({
+    currentUser && await axios({
         method: 'POST',
         url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/user/todos`,
         headers: {
