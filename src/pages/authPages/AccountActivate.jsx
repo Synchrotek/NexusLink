@@ -45,9 +45,11 @@ const AccountActivate = () => {
     }
 
     const activationLink = () => (
-        <div className='text-center flex justify-center'>
+        <div className='text-center flex justify-center mx-10'>
             <h1 className='my-12'>
-                Hey {values.name}, Ready to activate your account
+                Hey {values.name}
+                <br />
+                Ready to activate your account ?
                 <hr className='my-8 w-full' />
                 <button className='btn btn-outline btn-success'
                     onClick={clickSubmit}

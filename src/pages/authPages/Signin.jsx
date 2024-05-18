@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-hot-toast'
 import axios from 'axios'
 import { authenticate, isAuth } from '../../utils/authUtils/helper'
 import Layout from '../Layout'
@@ -13,6 +12,7 @@ const Signin = () => {
         password: '',
         loading: false
     });
+    const [passwordShow, setPasswordShow] = useState(false);
 
     const handleChange = (e, value) => {
         setValues({
@@ -80,10 +80,18 @@ const Signin = () => {
                 </label>
                 <input
                     className='w-full input input-bordered h-10 focus:outline-none'
-                    type="password" placeholder='Enter your password'
+                    type={passwordShow ? 'text' : 'password'}
+                    placeholder='Enter your password'
                     value={values.password}
                     onChange={e => handleChange(e, 'password')}
                 />
+                <label className='mt-1 label justify-start gap-2 cursor-pointer'>
+                    <input type="checkbox"
+                        className='checkbox checkbox-primary border-slate-400'
+                        onChange={() => setPasswordShow(!passwordShow)}
+                    />
+                    <span className='label-text'>Show Password</span>
+                </label>
             </div>
 
             {/* <label className='mt-1 label justify-start gap-2 cursor-pointer'>
@@ -94,15 +102,18 @@ const Signin = () => {
                 <span className='label-text'>Show Password</span>
             </label> */}
 
-            <div className='flex justify-between'>
+            <div className='flex justify-between text-xs sm:text-sm mt-3'>
                 <Link to="/auth/password/forogt"
-                    className='text-sm hover:underline hover:text-blue-500 inline-block mt-3'
+                    className='hover:underline hover:text-blue-500 inline-block'
                 >Forgot Password
                 </Link>
-
                 <Link to="/signup"
-                    className='text-sm hover:underline hover:text-blue-500 inline-block mt-3'
+                    className='hidden sm:inline-block hover:underline hover:text-blue-500'
                 >{"Don't"} have an account ?
+                </Link>
+                <Link to="/signup"
+                    className='sm:hidden hover:underline hover:text-blue-500 inline-block'
+                >Create account
                 </Link>
             </div>
             <div>
@@ -119,7 +130,6 @@ const Signin = () => {
 
     return (
         <Layout navFixed={true} className='backgroundWallpaper min-h-screen flex flex-col items-center justify-center min-w-96 mx-auto'>
-            <ToastContainer />
             <div className="rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0 w-3/4 sm:w-1/2 md:w-1/2 lg:w-1/2 px-6 py-10">
                 {isAuth() ? <Navigate to='/' /> : null}
                 <h1 className='text-3xl font-semibold text-center text-gray-300 my-6'>

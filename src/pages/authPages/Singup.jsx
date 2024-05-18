@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
-import { IoMdArrowRoundBack } from "react-icons/io";
+import { IoReturnDownBackOutline } from "react-icons/io5";
 import { isAuth } from '../../utils/authUtils/helper';
 import { uploadFileToDb } from '../../utils/apiCalls/file.apicalls';
 import Layout from '../Layout'
@@ -204,7 +204,7 @@ const Singup = () => {
                 />
             </div>
 
-            <div className='flex items-center justify-between '>
+            <div className='flex items-center h-full justify-between'>
                 <div className='flex flex-col justify-between'>
                     <label className='mt-1 label justify-start gap-2 cursor-pointer'>
                         <input type="checkbox"
@@ -215,13 +215,15 @@ const Singup = () => {
                     </label>
 
                     <Link to="/signin"
-                        className='text-sm hover:underline hover:text-blue-500 inline-block mt-2'
+                        className='text-sm hover:underline hover:text-blue-500 inline-block sm:mt-2'
                     >Already have an account?
                     </Link>
                 </div>
-                <button className='btn btn-ghost h-14 w-1/3 text-md'
+                <button className='btn btn-ghost h-full w-1/3 text-md py-2 sm:mt-0 sm:text-right'
                     onClick={toggleIsInputfieldPage2}
-                ><IoMdArrowRoundBack />Go Back
+                ><IoReturnDownBackOutline className='sm:text-3xl text-xl ' />
+                    <span className='hidden sm:block'>Go Back</span>
+                    <span className='block sm:hidden'>Back</span>
                 </button>
             </div>
 

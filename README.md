@@ -1,6 +1,8 @@
 ### NexusLink
 A collaborative coding web application built with React, Node.js, Express.js, Socket.io, and MongoDB. This platform enables multiple users to collaborate on coding projects in real-time, providing features such as synchronized code editing, group chat, to-do lists, notifications, and more.
 
+#### *Try it here - https://nexuslink01v.netlify.app*
+
 <!-- ### Features
 - User Authentication: Signup and login functionality for secure access.
 - Room Management: Enter existing rooms or generate new roomIds for collaboration.
