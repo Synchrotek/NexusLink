@@ -1,17 +1,6 @@
 const nodemailer = require('nodemailer');
-// let userEmail = undefined;
-// let userToken = undefined;
 
-// const chaneEmailTokenVal = (email, token) => {
-//     userEmail = email;
-//     userToken = token;
-//     AccontActivationEmail = {
-//         ...AccontActivationEmail,
-
-//     }
-// }
-
-/* // using mailtrap sandbox service -----------------------------
+// using mailtrap sandbox service -----------------------------
 const transporter = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 2525,
@@ -20,9 +9,8 @@ const transporter = nodemailer.createTransport({
         pass: process.env.MAILTRAP_SMTP_PASSWORD,
     },
 });
-*/
 
-// using gmail service ----------------------------------------
+/* // using gmail service ----------------------------------------
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     host: "smtp.gmail.com",
@@ -34,47 +22,72 @@ const transporter = nodemailer.createTransport({
         pass: process.env.GMAIL_APP_PASSWORD,
     },
 });
+*/
 
 // fnuction to give respective EmailTmplate ----------------------
 const getEmailTemplate = (email, token, emailType) => {
     if (emailType === 'account-activation') {
         return {
-            from: `"Sentinal Prime HQ👻" ${process.env.EMAIL_FROM}`, // sender address
+            from: `nexuslinkhq@nexuslink01.co`,
             to: email,
-            subject: `Account Activation Link ✔`,
+            subject: `Account Activation - NexusLink`,
             text: "Account Activation Link",
             html: `
-        <h1>Click on the below link</h1>
-        <h3>To Activate your Account</h3>
-        <a href="${process.env.CLIENT_URL}/auth/activate/${token}">
-            Click here to Activate your account to Continue.
-        </a>
-        <p>${process.env.CLIENT_URL}/auth/activate/${token}</p>
-        <br /><hr /><br />
-        <p>This email is kind of sensitive</p>
-        <p>Handle with care && Have a good Day ;)</p>
-        <p>${process.env.CLIENT_URL}</p>
-    `,
+    <div
+    style="display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #FFE8C8; padding: 10px padding-bottom: 20px;">
+    <h1>Click on the below link</h1>
+    <h3>To Activate your Account</h3>
+    <a href="${process.env.CLIENT_URL}/auth/activate/${token}">
+        Click here
+    </a>
+    <br>
+
+    <h4 style="text-align: center; width: 100%;">
+        Or copy & paste below url in your browser.
+    </h4>
+    <div style="overflow-wrap: break-word; inline-size: 80%;">
+        ${process.env.CLIENT_URL}/auth/activate/${token}
+    </div>
+    </p>
+    <hr />
+    <p style="display: flex; flex-direction: column; text-align: center;">
+        <span>( This email contains sensitive data. )</span>
+        <span>Please Handle with care</span>
+        <span>-------- And Have a good Day ;) --------</span>
+    </p>
+    <span>NexusLink HQ</span><span>${process.env.CLIENT_URL}</span>
+    </div>`,
         }
     }
     if (emailType === 'reset-password') {
         return {
-            from: `"Sentinal Prime HQ👻" ${process.env.EMAIL_FROM}`, // sender address
+            from: `nexuslinkhq@nexuslink01.co`,
             to: email,
-            subject: `Password Reset Link ✔`,
+            subject: `Password Reset - NexusLink`,
             text: "Password Reset Link",
             html: `
-        <h1>Click on the below link</h1>
-        <h3>To reset your password</h3>
-        <a href="${process.env.CLIENT_URL}/auth/password/reset/${token}">
-            Click here to Activate your account to Continue.
-        </a>
-        <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p>
-        <br /><hr /><br />
-        <p>This email is kind of sensitive</p>
-        <p>Handle with care && Have a good Day ;)</p>
-        <p>${process.env.CLIENT_URL}</p>
-    `,
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #FFE8C8; padding: 10px; padding-bottom: 20px;">
+    <h1>Click on the below link</h1>
+    <h3>To reset your password</h3>
+    <a href="${process.env.CLIENT_URL}/auth/password/reset/${token}">
+        Click here
+    </a>
+    <br>
+    <h4 style="text-align: center; width: 100%;">
+        Or copy & paste below url into your broser.
+    </h4>
+    <div style="overflow-wrap: break-word; inline-size: 80%;">
+        ${process.env.CLIENT_URL}/auth/password/reset/${token}
+    </div>
+    </p>
+    <hr />
+    <p style="display: flex; flex-direction: column; text-align: center;">
+        <span>( This email contains sensitive data. )</span>
+        <span>Please Handle with care</span>
+        <span>-------- And Have a good Day ;) --------</span>
+    </p>
+    <span>NexusLink HQ</span><span>${process.env.CLIENT_URL}</span>
+    </div>`,
         }
     }
 }

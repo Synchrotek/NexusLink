@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
+    social_login: {
+        type: String,
+        enum: ['', 'google', 'github'],
+        required: true,
+        default: ''
+    },
     hashed_password: {
         type: String,
         required: true
