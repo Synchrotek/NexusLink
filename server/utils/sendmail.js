@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-// using mailtrap sandbox service -----------------------------
+/* // using mailtrap sandbox service -----------------------------
 const transporter = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 2525,
@@ -9,8 +9,9 @@ const transporter = nodemailer.createTransport({
         pass: process.env.MAILTRAP_SMTP_PASSWORD,
     },
 });
+*/
 
-/* // using gmail service ----------------------------------------
+// using gmail service ----------------------------------------
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     host: "smtp.gmail.com",
@@ -22,7 +23,6 @@ const transporter = nodemailer.createTransport({
         pass: process.env.GMAIL_APP_PASSWORD,
     },
 });
-*/
 
 // fnuction to give respective EmailTmplate ----------------------
 const getEmailTemplate = (email, token, emailType) => {
