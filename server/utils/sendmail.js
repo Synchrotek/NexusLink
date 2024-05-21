@@ -33,16 +33,17 @@ const getEmailTemplate = (email, token, emailType) => {
             subject: `Account Activation - NexusLink`,
             text: "Account Activation Link",
             html: `
+
+
+
     <div
-    style="display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #FFE8C8; padding: 10px padding-bottom: 20px;">
-    <h1>Click on the below link</h1>
-    <h3>To Activate your Account</h3>
+    style="padding: 10px padding-bottom: 20px; text-align: start">
+    <h2>To Activate your Account</h2>
     <a href="${process.env.CLIENT_URL}/auth/activate/${token}">
         Click here
     </a>
     <br>
-
-    <h4 style="text-align: center; width: 100%;">
+    <h4 style="text-align: start; width: 100%;">
         Or copy & paste below url in your browser.
     </h4>
     <div style="overflow-wrap: break-word; inline-size: 80%;">
@@ -50,13 +51,18 @@ const getEmailTemplate = (email, token, emailType) => {
     </div>
     </p>
     <hr />
-    <p style="display: flex; flex-direction: column; text-align: center;">
-        <span>( This email contains sensitive data. )</span>
-        <span>Please Handle with care</span>
-        <span>-------- And Have a good Day ;) --------</span>
+    <p style="text-align: start;">
+        <div>( This email contains sensitive data. )</div>
+        <div>Please Handle with care &</div>
+        <div>-------- Have a good Day ;) --------</div>
     </p>
-    <span>NexusLink HQ</span><span>${process.env.CLIENT_URL}</span>
+    <div>NexusLink HQ</div>
+    <div>${process.env.CLIENT_URL}</div>
     </div>`,
+
+
+
+
         }
     }
     if (emailType === 'reset-password') {
@@ -66,27 +72,28 @@ const getEmailTemplate = (email, token, emailType) => {
             subject: `Password Reset - NexusLink`,
             text: "Password Reset Link",
             html: `
-    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #FFE8C8; padding: 10px; padding-bottom: 20px;">
-    <h1>Click on the below link</h1>
-    <h3>To reset your password</h3>
+    <div style="padding: 10px padding-bottom: 20px; text-align: start">
+    <h2>To reset your password</h2>
     <a href="${process.env.CLIENT_URL}/auth/password/reset/${token}">
         Click here
     </a>
     <br>
-    <h4 style="text-align: center; width: 100%;">
-        Or copy & paste below url into your broser.
+    <h4 style="text-align: start; width: 100%;">
+        Or copy & paste below url in your browser.
     </h4>
+    </div>
     <div style="overflow-wrap: break-word; inline-size: 80%;">
         ${process.env.CLIENT_URL}/auth/password/reset/${token}
     </div>
     </p>
     <hr />
-    <p style="display: flex; flex-direction: column; text-align: center;">
-        <span>( This email contains sensitive data. )</span>
-        <span>Please Handle with care</span>
-        <span>-------- And Have a good Day ;) --------</span>
+    <p style="text-align: start;">
+        <div>( This email contains sensitive data. )</div>
+        <div>Please Handle with care &</div>
+        <div>-------- Have a good Day ;) --------</div>
     </p>
-    <span>NexusLink HQ</span><span>${process.env.CLIENT_URL}</span>
+    <div>NexusLink HQ</div>
+    <div>${process.env.CLIENT_URL}</div>
     </div>`,
         }
     }

@@ -31,7 +31,7 @@ const ForgotPassword = () => {
             toast.error(err.response.data.error);
             setValues({ ...values, loading: false })
         });
-        setValues({ ...values, loading: false })
+        setValues({ email: '', loading: false })
     }
 
 
