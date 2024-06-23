@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { Editor } from '@monaco-editor/react'
 import SOCKET_ACTIONS from '../../utils/socketConn/SocketActions';
 import { WorkspaceContext } from '../../context/WorkspaceProvider';
@@ -8,7 +8,6 @@ import { WorkspaceContext } from '../../context/WorkspaceProvider';
 const CodeEditor = ({
     socketRef, setFiles, editorTheme,
     handleCurrentSelectedFileRefChange, handleFileChange
-
 }) => {
     const {
         currentSelectedFile, currentSelectedFileIndexRef, isFilesSyncing
@@ -31,7 +30,7 @@ const CodeEditor = ({
                 socketRef.current.off(SOCKET_ACTIONS.CODE_CHANGE);
             }
         };
-    }, [socketRef.current, setFiles]);
+    }, [socketRef.current, setFiles, isFilesSyncing]);
 
     return (
         <Editor className='bg pt-2'

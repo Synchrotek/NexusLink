@@ -173,6 +173,10 @@ const Workspace = () => {
         }
     }, [location.state?.userDeatils, reactNavigate, roomId]);
 
+    useEffect(() => {
+        console.log('isFilesSyncing: ', isFilesSyncing);
+    }, [isFilesSyncing]);
+
     // =================================================================================
     const toggleIsChatSelected = () => {
         if (isChatSelected) {
