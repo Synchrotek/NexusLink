@@ -12,12 +12,13 @@ import { WorkspaceContext } from '../../context/WorkspaceProvider.jsx';
 import ChatPage from '../chatPages/ChatPage.jsx';
 import axios from 'axios';
 import TodoPage from '../todoPages/TodoPage.jsx';
-import { getAllTodosFromDB, updateAllTodos } from '../../utils/apiCalls/user.apicalls.js';
+import { getAllTodosFromDB, updateAllTodos, saveProject, getAllProjects } from '../../utils/apiCalls/user.apicalls.js';
 import RoomDetails from './RoomDetails.jsx';
 
 const Workspace = () => {
     const {
         socketRef, token,
+        userSavedProjects, setUserSavedProjects,
         currentSelectedFile, setCurrentSelectedFile,
         allDbFetchedMessages, setAllDbFetchedMessages,
         allMessages, setAllMessages,
@@ -175,7 +176,12 @@ const Workspace = () => {
 
     useEffect(() => {
         console.log('isFilesSyncing: ', isFilesSyncing);
+        console.log(files);
     }, [isFilesSyncing]);
+
+    useEffect(() => {
+        console.log('userSavedProjects: ', userSavedProjects);
+    }, [userSavedProjects, files]);
 
     // =================================================================================
     const toggleIsChatSelected = () => {
@@ -208,6 +214,7 @@ const Workspace = () => {
             })
         }
     }
+
     const handleFileLanguageChange = (newFileLanguage) => {
         // console.log('newFileLanguage: ', newFileLanguage);
         setCurrentSelectedFile(prevCurrentSelectedFile => {
@@ -247,6 +254,9 @@ const Workspace = () => {
         }
     }
     const handleLeaveRoom = async () => {
+        if (!isFilesSyncing) {
+            return toast.error("Please Turn on the sync before Leaving");
+        }
         await updateFilesInRoom();
         await pushToDbMessages();
         await updateAllTodos(token, todos);
@@ -297,6 +307,8 @@ const Workspace = () => {
                 handleFileLanguageChange={handleFileLanguageChange}
                 isChatSelected={isChatSelected}
                 toggleIsChatSelected={toggleIsChatSelected}
+                saveProject={saveProject}
+                getAllProjects={getAllProjects}
             />
             <div className='h-[85%] relative'>
                 <ChatPage

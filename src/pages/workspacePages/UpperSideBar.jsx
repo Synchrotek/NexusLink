@@ -1,18 +1,22 @@
 /* eslint-disable react/prop-types */
 import { CiSquarePlus } from "react-icons/ci";
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import ConnectedUsersBar from './ConnectedUsersBar'
 import FileListBar from './FileListBar'
-import { BiAdjust } from "react-icons/bi";
 import { WorkspaceContext } from "../../context/WorkspaceProvider";
+import UserSavedProjectsListItem from "./UserSavedProjectsListItem";
 
 const UpperSideBar = ({
     connectedUsers, files, setFiles,
     handleCurrentSelectedFileRefChange,
     selectedUserProfile
 }) => {
-    const { currentSelectedFileIndexRef } = useContext(WorkspaceContext);
-    const [isFilesTabOpen, setIsFilesTabOpen] = useState(true);
+    const {
+        userSavedProjects, setUserSavedProjects,
+        currentSelectedFileIndexRef,
+        isFilesSyncing, token
+    } = useContext(WorkspaceContext);
+    const [tabOpen, setTabOpen] = useState(2);
     const [isFileCreating, setIsFileCreating] = useState(false);
     const [newFileName, setNewFileName] = useState('');
 
@@ -74,7 +78,25 @@ const UpperSideBar = ({
                     handleDeleteFile={handleDeleteFile}
                     currentSelectedFileIndexRef={currentSelectedFileIndexRef}
                 />
+            ))}
+        </div>)
 
+    const UserSavedProjectsList = () => (
+        <div className="flex flex-col gap-2">
+            <div className="flex justify-between px-5">
+                <div className="text-sm text-center w-full">
+                    <p>Click a saved project</p>
+                    <p>To import</p>
+                </div>
+            </div>
+            {userSavedProjects.map(project => (
+                <UserSavedProjectsListItem key={project._id}
+                    project={project}
+                    token={token}
+                    setFiles={setFiles}
+                    handleCurrentSelectedFileRefChange={handleCurrentSelectedFileRefChange}
+                    setUserSavedProjects={setUserSavedProjects}
+                />
             ))}
         </div>)
 
@@ -83,19 +105,28 @@ const UpperSideBar = ({
         >
             <div role="tablist" className="absolute top-16 tabs tabs-bordered">
                 <button
-                    onClick={() => setIsFilesTabOpen(false)}
-                    role="tab" className={`tab ${isFilesTabOpen ? '' : 'tab-active'}`}>Users
+                    onClick={() => setTabOpen(1)}
+                    role="tab" className={`tab ${tabOpen === 1 && 'tab-active'}`}>
+                    Users
                 </button>
                 <button
-                    onClick={() => setIsFilesTabOpen(true)}
-                    role="tab" className={`tab ${isFilesTabOpen ? 'tab-active' : ''}`}>Files
+                    onClick={() => setTabOpen(2)}
+                    role="tab" className={`tab ${tabOpen === 2 && 'tab-active'}`}>
+                    Files
                 </button>
+                {!isFilesSyncing && <button
+                    onClick={() => setTabOpen(3)}
+                    role="tab" className={`tab ${tabOpen === 3 && 'tab-active'}`}>
+                    Saves
+                </button>}
             </div>
             <div className='h-[90%]'>
-                {isFilesTabOpen ? (<>
-                    {FileList()}
-                </>) : (<>
+                {(tabOpen === 1) ? (<>
                     {ConnectedUserList()}
+                </>) : (<>
+                    {tabOpen === 2 || isFilesSyncing ?
+                        FileList() : UserSavedProjectsList()
+                    }
                 </>)}
             </div>
         </div>

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
 
 // Room schema ----------------------------------------
 const roomSchema = new mongoose.Schema({

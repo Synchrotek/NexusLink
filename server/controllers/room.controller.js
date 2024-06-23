@@ -37,10 +37,10 @@ exports.createNewRoom = async (req, res) => {
 
 exports.getAllRooms = async (req, res) => {
     await Room.find().then((allRooms) => {
-        return res.status(201).json(allRooms || []);
+        return res.status(200).json(allRooms || []);
     }).catch((err) => {
         console.log('FETCHING ALL ROOMS IN DATABASE ERROR', err);
-        return res.status(400).json({
+        return res.status(500).json({
             error: 'Error fetching rooms. Please try again'
         });
     })

@@ -1,18 +1,21 @@
 /* eslint-disable react/prop-types */
-import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaCode } from "react-icons/fa";
 import { MdSyncDisabled, MdOutlineSync, MdMessage } from "react-icons/md";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { WorkspaceContext } from "../../context/WorkspaceProvider";
 
 const WorksapceHeader = ({
     setEditorTheme,
     handleFileLanguageChange,
-    isChatSelected, toggleIsChatSelected
+    isChatSelected, toggleIsChatSelected,
+    saveProject, getAllProjects,
 }) => {
     const {
+        token,
+        setUserSavedProjects,
         currentSelectedFile,
-        isFilesSyncing, setIsFilesSyncing
+        files,
+        isFilesSyncing, setIsFilesSyncing,
     } = useContext(WorkspaceContext);
 
     // Editor dynamic properties -------------------------------------
@@ -26,7 +29,21 @@ const WorksapceHeader = ({
         'vs-dark', 'light'
     ]
 
-    const toggleIsFilesSyncing = () => {
+    const toggleIsFilesSyncing = async () => {
+        if (!isFilesSyncing) {
+            const userProceed = confirm("Do you want to save current work as Projct ?");
+            let projectName;
+            if (userProceed) {
+                projectName = prompt("Name of this save: ");
+                while (!projectName) {
+                    projectName = prompt("Name of this save: ");
+                }
+                await saveProject(token, projectName, files);
+            }
+        } else {
+            const allProjects = await getAllProjects(token);
+            setUserSavedProjects(allProjects);
+        }
         setIsFilesSyncing(prevIsFilesSyncing => !prevIsFilesSyncing);
     }
 
@@ -93,8 +110,6 @@ const WorksapceHeader = ({
         <div className={`navbar bg-slate-600 flex justify-between max-h-[15%]`}>
             {WorksapcePageHeader()}
         </div>
-
-
     )
 }
 

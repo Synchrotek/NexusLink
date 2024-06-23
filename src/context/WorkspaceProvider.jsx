@@ -15,6 +15,7 @@ const WorkspaceProvider = ({ children }) => {
             fileContent: '// Hello world', language: 'javascript'
         }
     ]);
+    const [userSavedProjects, setUserSavedProjects] = useState([]);
     const [currentSelectedFile, setCurrentSelectedFile] = useState(files[0]);
     const [selectedUserProfile, setSelectedUserProfile] = useState();
     const [isFilesSyncing, setIsFilesSyncing] = useState(true);
@@ -28,6 +29,7 @@ const WorkspaceProvider = ({ children }) => {
             currentSelectedFile, setCurrentSelectedFile,
             allMessages, setAllMessages,
             allDbFetchedMessages, setAllDbFetchedMessages,
+            userSavedProjects, setUserSavedProjects,
             currentSelectedFileIndexRef,
             files, setFiles,
             selectedUserProfile, setSelectedUserProfile,

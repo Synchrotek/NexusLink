@@ -1,4 +1,5 @@
 import axios from "axios";
+// import toast from "react-hot-toast";
 
 export const uploadFileToDb = async (setLoader, selectedFileData, setSelectedFileData) => {
     let uploadedFileData = "";

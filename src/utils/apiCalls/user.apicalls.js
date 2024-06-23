@@ -44,3 +44,57 @@ export const getAllTodosFromDB = async (token, setTodos) => {
     setTodos(responseData);
 }
 
+
+export const saveProject = async (token, projectName, files) => {
+    await axios({
+        method: 'POST',
+        url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/project`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        data: { userId: currentUser._id, name: projectName, files }
+    }).then(response => {
+        // console.log('ALl FIles save for an user -----------------------------')
+        toast.success("Project saved");
+        return response.data;
+    }).catch(err => {
+        console.log('Project save for an user', err.response.data);
+        return toast.error(err.response.data.error);
+    });
+}
+
+export const getAllProjects = async (token) => {
+    let responseData;
+    const userId = currentUser._id;
+    await axios({
+        method: 'GET',
+        url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/project/${userId}`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    }).then((response) => {
+        // console.log('ALl FIles save for an user -----------------------------')
+        console.log('GetAllProjects: ', response.data);
+        responseData = response.data;
+    }).catch(err => {
+        console.log('Project fetching for an user error: ', err.response.data);
+        return toast.error(err.response.data.error);
+    });
+    return responseData;
+}
+
+export const deleteProject = async (token, projectId) => {
+    await axios({
+        method: 'DELETE',
+        url: `${import.meta.env.VITE_BACKEND_ENDPOINT}/project/${projectId}`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    }).then((response) => {
+        // console.log('Project Delete of an user -----------------------------')
+        toast.success(response.data.message)
+    }).catch(err => {
+        console.log('Project deleting of an user error: ', err.response.data);
+        return toast.error(err.response.data.error);
+    });
+}
